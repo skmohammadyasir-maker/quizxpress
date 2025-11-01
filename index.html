@@ -4,10 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Black Force 007 — Quiz</title>
+
+  <!-- ✅ Google AdSense Verification -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8486825272017960"
+     crossorigin="anonymous"></script>
+
   <!-- Noto Sans Bengali -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="app">
     <header class="top">
@@ -17,6 +23,7 @@
         <div class="stat small">সময়: <span id="time">15</span>s</div>
       </div>
     </header>
+
     <main class="card quiz-container">
       <div id="stats" class="stats-row">
         <div class="stat">✅ সঠিক: <strong id="stat-correct">0</strong></div>
@@ -24,11 +31,13 @@
         <div class="stat">🔢 পয়েন্ট: <strong id="stat-score">0</strong></div>
         <div class="stat">💰 কয়েন: <strong id="stat-coins">0</strong></div>
       </div>
+
       <div class="question-box">
         <div id="question" class="question-text">প্রশ্ন লোড হচ্ছে...</div>
         <div id="hint" class="hint hidden"></div>
         <div id="options" class="options-grid"></div>
       </div>
+
       <div class="controls">
         <div class="left-controls">
           <div class="progress">প্রশ্ন <span id="qIndex">0</span>/<span id="qTotal2">0</span></div>
@@ -44,6 +53,7 @@
         </div>
       </div>
     </main>
+
     <div id="result-screen" class="modal hidden">
       <div class="modal-card">
         <h2>🎯 গেম শেষ!</h2>
@@ -57,13 +67,15 @@
         </div>
       </div>
     </div>
+
     <footer class="foot">
       <small>সাউন্ড: sounds/ মধ্যে correct.mp3, wrong.mp3, click.mp3 রাখুন।</small>
     </footer>
   </div>
+
   <!-- Load questions first -->
   <script src="questions.js"></script>
   <script src="engine.js"></script>
   <script src="script.js" defer></script>
 </body>
-          </html>
+</html>

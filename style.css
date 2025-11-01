@@ -1,29 +1,209 @@
-:root{--bg:#0f1724;--card:#0b1220;--accent:#fbbf24;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
-*{box-sizing:border-box;font-family:'Noto Sans Bengali',sans-serif}
-body{margin:0;background:linear-gradient(180deg,#071023 0%,#071a2b 100%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.app{width:100%;max-width:860px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.title{margin:0;font-size:28px}
-.small{font-size:13px;color:var(--muted)}
-.card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
-.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.stat{background:var(--glass);padding:8px 10px;border-radius:8px;font-size:14px}
-.question-box{padding:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:10px}
-.question-text{font-size:20px;margin-bottom:12px}
-.hint{font-size:14px;color:#ffd966;margin-bottom:8px}
-.options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.option{padding:12px;border-radius:8px;background:rgba(255,255,255,0.03);cursor:pointer;border:1px solid transparent}
-.option:hover{transform:translateY(-2px)}
-.option.correct{background:linear-gradient(90deg,#16a34a22,#16a34a33);border-color:#16a34a55}
-.option.wrong{background:linear-gradient(90deg,#dc262622,#dc262633);border-color:#dc262655}
-.controls{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.lifelines{display:flex;gap:6px}
-.btn{padding:8px 10px;border-radius:8px;border:0;cursor:pointer;background:#123;color:#fff}
-.btn.small{padding:6px 8px;font-size:13px}
-.btn.yellow{background:var(--accent);color:#06111a}
-.timer{font-weight:700}
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6)}
-.modal.hidden{display:none}
-.modal-card{background:var(--card);padding:20px;border-radius:12px;width:320px;text-align:center}
-.foot{margin-top:12px;text-align:center;color:var(--muted)}
-.hidden{display:none}
+// UI glue
+const qTotalEl = document.getElementById('qTotal');
+const qTotal2El = document.getElementById('qTotal2');
+const qIndexEl = document.getElementById('qIndex');
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const timerEl = document.getElementById('timer');
+const statCorrect = document.getElementById('stat-correct');
+const statWrong = document.getElementById('stat-wrong');
+const statScore = document.getElementById('stat-score');
+const statCoins = document.getElementById('stat-coins');
+const resultScreen = document.getElementById('result-screen');
+const finalCorrect = document.getElementById('final-correct');
+const finalWrong = document.getElementById('final-wrong');
+const finalScore = document.getElementById('final-score');
+const finalCoins = document.getElementById('final-coins');
+const bestScore = document.getElementById('bestScore');
+const playAgain = document.getElementById('playAgain');
+const fiftyBtn = document.getElementById('fiftyBtn');
+const hintBtn = document.getElementById('hintBtn');
+const skipBtn = document.getElementById('skipBtn');
+const hintEl = document.getElementById('hint');
+const soundToggle = document.getElementById('soundToggle');
+
+let soundsOn = true;
+const sounds = {
+  click: new Audio('sounds/click.mp3'),
+  correct: new Audio('sounds/correct.mp3'),
+  wrong: new Audio('sounds/wrong.mp3')
+};
+
+function playSound(name) {
+  if (!soundsOn) return;
+  const s = sounds[name];
+  if (s) {
+    s.currentTime = 0;
+    s.play().catch(() => {});
+  }
+}
+
+// Instantiate engine
+const engine = new GameEngine({
+  questions: QUESTIONS,
+  total: 40,
+  timePerQ: 15,
+  coinsPerCorrect: 5,
+  skipPenalty: 0
+});
+
+function renderStats() {
+  qTotalEl.textContent = engine.total;
+  qTotal2El.textContent = engine.total;
+  qIndexEl.textContent = Math.min(engine.index + 1, engine.total);
+  statCorrect.textContent = engine.correct;
+  statWrong.textContent = engine.wrong;
+  statScore.textContent = engine.score;
+  statCoins.textContent = engine.coins;
+}
+
+function shuffleArray(arr) {
+  return arr
+    .map(v => ({ v, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ v }) => v);
+}
+
+function renderQuestion() {
+  const q = engine.current();
+  optionsEl.innerHTML = '';
+  hintEl.classList.add('hidden');
+  hintEl.textContent = '';
+  if (!q) {
+    finishGame();
+    return;
+  }
+
+  questionEl.textContent = q.q;
+
+  // shuffle options
+  const optionPairs = q.options.map((opt, i) => ({ text: opt, index: i }));
+  const shuffled = shuffleArray(optionPairs);
+
+  shuffled.forEach((opt) => {
+    const b = document.createElement('div');
+    b.className = 'option';
+    b.dataset.index = opt.index;
+    b.textContent = opt.text;
+    b.addEventListener('click', () => onOptionClick(opt.index, b));
+    optionsEl.appendChild(b);
+  });
+
+  renderStats();
+  startQTimer();
+}
+
+let optionClickable = true;
+function onOptionClick(i, btnEl) {
+  if (!optionClickable) return;
+  optionClickable = false;
+  engine.stopTimer();
+
+  const res = engine.answer(i);
+
+  if (res.correct) {
+    btnEl.classList.add('correct', 'highlight');
+    playSound('correct');
+  } else {
+    btnEl.classList.add('wrong', 'shake');
+    playSound('wrong');
+    // show correct
+    const correctIndex = engine.questions[engine.index - 1]?.a;
+    if (correctIndex != null) {
+      const el = [...optionsEl.children].find(
+        x => +x.dataset.index === correctIndex
+      );
+      if (el) el.classList.add('correct', 'highlight');
+    }
+  }
+
+  setTimeout(() => {
+    btnEl.classList.remove('highlight', 'shake');
+    optionClickable = true;
+    if (engine.isFinished()) finishGame();
+    else renderQuestion();
+  }, 1000);
+}
+
+function startQTimer() {
+  timerEl.textContent = engine.timePerQ;
+  engine.startTimer(
+    (t) => {
+      timerEl.textContent = t;
+    },
+    () => {
+      // time expired -> mark wrong and move on
+      playSound('wrong');
+      engine.wrong++;
+      engine.index++;
+      engine.streak = 0;
+      renderStats();
+      if (engine.isFinished()) finishGame();
+      else renderQuestion();
+    }
+  );
+}
+
+function finishGame() {
+  engine.stopTimer();
+  finalCorrect.textContent = engine.correct;
+  finalWrong.textContent = engine.wrong;
+  finalScore.textContent = engine.score;
+  finalCoins.textContent = engine.coins;
+  const best = Math.max(
+    parseInt(localStorage.getItem('bf_best') || 0),
+    engine.score
+  );
+  localStorage.setItem('bf_best', best);
+  bestScore.textContent = best;
+  resultScreen.classList.remove('hidden');
+}
+
+playAgain.addEventListener('click', () => {
+  resultScreen.classList.add('hidden');
+  engine.reset();
+  renderQuestion();
+});
+
+fiftyBtn.addEventListener('click', () => {
+  playSound('click');
+  const removed = engine.useFifty();
+  if (!removed) {
+    alert('50-50 আগেই ব্যবহৃত হয়েছে');
+    return;
+  }
+  for (const idx of removed) {
+    const el = [...optionsEl.children].find(x => +x.dataset.index === idx);
+    if (el) el.style.visibility = 'hidden';
+  }
+});
+
+hintBtn.addEventListener('click', () => {
+  playSound('click');
+  const hint = engine.useHint();
+  if (!hint) {
+    alert('Hint আগেই ব্যবহৃত হয়েছে');
+    return;
+  }
+  hintEl.textContent = hint;
+  hintEl.classList.remove('hidden');
+});
+
+skipBtn.addEventListener('click', () => {
+  playSound('click');
+  const ok = engine.useSkip();
+  if (!ok) {
+    alert('Skip আগেই ব্যবহৃত হয়েছে');
+    return;
+  }
+  if (engine.isFinished()) finishGame();
+  else renderQuestion();
+});
+
+soundToggle.addEventListener('click', () => {
+  soundsOn = !soundsOn;
+  soundToggle.textContent = soundsOn ? '🔊' : '🔇';
+});
+
+// initial
+renderQuestion();

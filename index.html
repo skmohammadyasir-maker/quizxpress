@@ -64,14 +64,6 @@
       <div class="controls">
         <div class="left-controls">
           <div class="progress">প্রশ্ন <span id="qIndex">0</span>/<span id="qTotal2">0</span></div>
-          <div class="lifelines">
-            <button id="fiftyBtn" class="btn small">50-50</button>
-            <button id="hintBtn" class="btn small">💡 Hint</button>
-            <button id="skipBtn" class="btn small yellow">⏭ Skip</button>
-          </div>
-        </div>
-        <div class="right-controls">
-          <button id="soundToggle" class="btn small">🔊</button>
         </div>
       </div>
     </main>
@@ -82,8 +74,6 @@
         <p>সঠিক: <strong id="final-correct">0</strong></p>
         <p>ভুল: <strong id="final-wrong">0</strong></p>
         <p>মোট পয়েন্ট: <strong id="final-score">0</strong></p>
-        <p>আর্জিত কয়েন: <strong id="final-coins">0</strong></p>
-        <p>🏆 সর্বোচ্চ স্কোর (Local): <strong id="bestScore">0</strong></p>
         <div style="margin-top:14px;">
           <button id="playAgain" class="btn yellow">🔁 আবার খেলুন</button>
         </div>
@@ -92,73 +82,78 @@
 
     <footer class="foot">
       <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved</p>
-      <small>🎵 সাউন্ড ফাইল রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
+      <small>🎵 সাউন্ড রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
     </footer>
   </div>
 
   <!-- ✅ JavaScript -->
   <script>
     async function loadQuestions() {
+      const questionText = document.getElementById("question");
+      const optionsBox = document.getElementById("options");
+      const qIndex = document.getElementById("qIndex");
+      const qTotal = document.getElementById("qTotal");
+      const qTotal2 = document.getElementById("qTotal2");
+
       try {
-        const res = await fetch("questions.json");
+        const res = await fetch("questions.json?" + new Date().getTime()); // prevent cache
+        if (!res.ok) throw new Error("File not found");
         const data = await res.json();
 
-        if (!data || data.length === 0) {
-          document.getElementById("question").innerText = "❌ কোনো প্রশ্ন পাওয়া যায়নি!";
+        if (!Array.isArray(data) || data.length === 0) {
+          questionText.textContent = "❌ কোনো প্রশ্ন পাওয়া যায়নি!";
           return;
         }
 
-        let index = 0;
-        const questionText = document.getElementById("question");
-        const optionsBox = document.getElementById("options");
-        const qIndex = document.getElementById("qIndex");
-        const qTotal = document.getElementById("qTotal");
-        const qTotal2 = document.getElementById("qTotal2");
+        startQuiz(data);
+      } catch (err) {
+        console.warn("⚠️ JSON লোড ব্যর্থ, fallback প্রশ্ন ব্যবহার হচ্ছে।", err);
 
+        const fallback = [
+          {
+            question: "ভারতের রাজধানী কোনটি?",
+            options: ["কলকাতা", "দিল্লি", "মুম্বাই", "চেন্নাই"],
+            answer: "দিল্লি"
+          },
+          {
+            question: "বাংলাদেশের মুদ্রার নাম কী?",
+            options: ["রুপি", "ডলার", "টাকা", "পাউন্ড"],
+            answer: "টাকা"
+          }
+        ];
+        startQuiz(fallback);
+      }
+
+      function startQuiz(data) {
+        let index = 0;
         qTotal.textContent = data.length;
         qTotal2.textContent = data.length;
+        showQuestion();
 
-        function showQuestion(i) {
-          const q = data[i];
+        function showQuestion() {
+          const q = data[index];
           questionText.textContent = q.question;
           optionsBox.innerHTML = "";
+          q.options.sort(() => Math.random() - 0.5);
           q.options.forEach(opt => {
             const btn = document.createElement("button");
             btn.textContent = opt;
             btn.onclick = () => {
-              if (opt === q.answer) {
-                btn.style.background = "#00e676";
-              } else {
-                btn.style.background = "#ff1744";
-              }
+              btn.style.background = opt === q.answer ? "#00e676" : "#ff1744";
               setTimeout(() => {
                 index++;
-                if (index < data.length) {
-                  showQuestion(index);
-                } else {
+                if (index < data.length) showQuestion();
+                else {
                   questionText.textContent = "🎯 সব প্রশ্ন শেষ!";
                   optionsBox.innerHTML = "";
                 }
                 qIndex.textContent = index + 1;
-              }, 800);
+              }, 700);
             };
             optionsBox.appendChild(btn);
           });
-          qIndex.textContent = i + 1;
-          shuffleOptions();
+          qIndex.textContent = index + 1;
         }
-
-        showQuestion(index);
-      } catch (err) {
-        document.getElementById("question").innerText = "⚠️ প্রশ্ন লোড করতে সমস্যা হয়েছে!";
-        console.error(err);
-      }
-    }
-
-    function shuffleOptions() {
-      const container = document.getElementById('options');
-      for (let i = container.children.length; i >= 0; i--) {
-        container.appendChild(container.children[Math.random() * i | 0]);
       }
     }
 

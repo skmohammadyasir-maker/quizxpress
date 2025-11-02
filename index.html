@@ -3,152 +3,153 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Black Force 007 — QuizXpress</title>
+  <title>Black Force 007 — Quiz</title>
 
-  <!-- ✅ Google AdSense Verification -->
+  <!-- ✅ Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8486825272017960"
      crossorigin="anonymous"></script>
 
-  <!-- ✅ Google Font -->
+  <!-- ✅ Font -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Noto Sans Bengali', sans-serif;
+    :root {
+      --bg-dark: #0a0a0f;
+      --neon-blue: #00e5ff;
+      --neon-gold: #ffcc00;
+      --text-light: #f1f1f1;
+    }
+
+    * {
       margin: 0;
-      background: radial-gradient(circle at top, #0d0d0d, #000);
-      color: #e0e0e0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Noto Sans Bengali', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #111827, #000);
+      color: var(--text-light);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header.top {
-      background: linear-gradient(90deg, #000, #111, #000);
-      color: #0ff;
-      padding: 14px 18px;
+      background: #000;
+      border-bottom: 3px solid var(--neon-blue);
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #00ffff33;
-      box-shadow: 0 0 12px #00ffff44;
+      box-shadow: 0 0 10px var(--neon-blue);
     }
 
     .title {
       font-size: 1.5rem;
+      color: var(--neon-gold);
       font-weight: 700;
-      text-shadow: 0 0 10px #00ffff;
+      text-shadow: 0 0 10px var(--neon-gold);
     }
 
-    .stat { margin-left: 12px; font-size: 0.9rem; }
+    .stat { margin-left: 14px; font-size: 0.9rem; }
 
     main.card {
-      background: rgba(20, 20, 20, 0.9);
-      margin: 30px auto;
-      max-width: 800px;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 0 25px #00ffff22;
-      border: 1px solid #00ffff33;
+      background: rgba(20, 20, 30, 0.9);
+      max-width: 850px;
+      width: 90%;
+      margin: 25px auto;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.3);
     }
 
     .question-text {
       font-size: 1.2rem;
-      margin-bottom: 18px;
-      color: #0ff;
+      margin-bottom: 16px;
       text-align: center;
-      text-shadow: 0 0 5px #00ffff99;
+      color: var(--neon-gold);
+      text-shadow: 0 0 5px var(--neon-gold);
     }
 
     .options-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 
     .options-grid button {
-      background: #111;
-      border: 2px solid #00ffff55;
+      background: linear-gradient(90deg, #002b36, #004d66);
       color: #fff;
-      font-size: 1rem;
-      padding: 12px;
+      border: 2px solid var(--neon-blue);
       border-radius: 10px;
+      padding: 10px;
+      font-size: 1rem;
       cursor: pointer;
-      transition: all 0.2s ease;
-      text-shadow: 0 0 4px #00ffff66;
+      transition: 0.3s;
     }
 
     .options-grid button:hover {
-      background: #00ffff22;
+      background: var(--neon-blue);
+      color: #000;
+      box-shadow: 0 0 12px var(--neon-blue);
       transform: scale(1.05);
-      box-shadow: 0 0 10px #00ffff55;
     }
 
     .controls {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-top: 18px;
       flex-wrap: wrap;
-      color: #ccc;
     }
 
     .btn {
-      background: linear-gradient(90deg, #111, #222);
-      color: #0ff;
-      border: 1px solid #00ffff66;
-      border-radius: 8px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s ease;
-      box-shadow: 0 0 5px #00ffff33;
-    }
-
-    .btn:hover {
-      background: #00ffff33;
-      box-shadow: 0 0 10px #00ffff66;
-      color: #fff;
-    }
-
-    .btn.yellow {
-      background: linear-gradient(90deg, #ffb400, #ffaa00);
+      background: var(--neon-blue);
       color: #000;
       border: none;
-      box-shadow: 0 0 8px #ffb400aa;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
     }
 
-    .modal-card {
-      background: #111;
-      color: #0ff;
-      border: 2px solid #00ffff55;
-      border-radius: 14px;
-      padding: 25px;
-      box-shadow: 0 0 20px #00ffff33;
-    }
+    .btn:hover { background: var(--neon-gold); transform: scale(1.1); }
+
+    .btn.yellow { background: var(--neon-gold); }
 
     footer.foot {
       background: #000;
-      color: #0ff;
+      color: var(--neon-blue);
       text-align: center;
-      padding: 18px;
-      font-size: 0.85rem;
-      border-top: 2px solid #00ffff55;
-      box-shadow: 0 -2px 12px #00ffff22;
+      padding: 16px;
+      margin-top: auto;
+      border-top: 3px solid var(--neon-gold);
+      box-shadow: 0 -2px 10px var(--neon-blue);
+      font-size: 0.9rem;
     }
 
-    footer.foot a {
-      color: #ffb400;
-      text-decoration: none;
-      font-weight: bold;
+    .modal-card {
+      background: rgba(15, 15, 25, 0.95);
+      border: 2px solid var(--neon-blue);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      color: var(--neon-gold);
     }
+
+    .modal.hidden { display: none; }
   </style>
 </head>
 
 <body>
   <div class="app">
     <header class="top">
-      <h1 class="title">🎮 Black Force 007 Quiz</h1>
+      <h1 class="title">🎮 Black Force 007</h1>
       <div class="top-right">
-        <div class="stat small">প্রশ্ন: <span id="qTotal">0</span></div>
-        <div class="stat small">সময়: <span id="time">15</span>s</div>
+        <div class="stat">প্রশ্ন: <span id="qTotal">0</span></div>
+        <div class="stat">⏱ সময়: <span id="time">15</span>s</div>
       </div>
     </header>
 
@@ -171,12 +172,11 @@
           <div class="progress">প্রশ্ন <span id="qIndex">0</span>/<span id="qTotal2">0</span></div>
           <div class="lifelines">
             <button id="fiftyBtn" class="btn small">50-50</button>
-            <button id="hintBtn" class="btn small">Hint 💡</button>
-            <button id="skipBtn" class="btn small yellow">Skip ⏭</button>
+            <button id="hintBtn" class="btn small">💡 Hint</button>
+            <button id="skipBtn" class="btn small yellow">⏭ Skip</button>
           </div>
         </div>
         <div class="right-controls">
-          <div class="timer">⏱ <span id="timer">15</span>s</div>
           <button id="soundToggle" class="btn small">🔊</button>
         </div>
       </div>
@@ -189,7 +189,7 @@
         <p>ভুল: <strong id="final-wrong">0</strong></p>
         <p>মোট পয়েন্ট: <strong id="final-score">0</strong></p>
         <p>আর্জিত কয়েন: <strong id="final-coins">0</strong></p>
-        <p>সর্বোচ্চ স্কোর (Local): <strong id="bestScore">0</strong></p>
+        <p>🏆 সর্বোচ্চ স্কোর (Local): <strong id="bestScore">0</strong></p>
         <div style="margin-top:14px;">
           <button id="playAgain" class="btn yellow">🔁 আবার খেলুন</button>
         </div>
@@ -197,32 +197,32 @@
     </div>
 
     <footer class="foot">
-      <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved.</p>
-      <p>
-        📜 <a href="privacy.html" target="_blank">Privacy Policy</a> |
-        📧 <a href="mailto:skmohammadyasir@gmail.com">Contact</a> |
-        🎮 Game by <strong>QuizXpress</strong>
-      </p>
-      <small>🔊 সাউন্ড রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
+      <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved</p>
+      <small>🎵 সাউন্ড ফাইল রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
     </footer>
   </div>
 
   <!-- ✅ JavaScript -->
-  <script src="questions.js"></script>
   <script>
-    // ✅ Shuffle answer options randomly
+    // Randomize answer options each time
     function shuffleOptions() {
-      const container = document.getElementById("options");
+      const container = document.getElementById('options');
       for (let i = container.children.length; i >= 0; i--) {
         container.appendChild(container.children[Math.random() * i | 0]);
       }
     }
 
-    // ✅ Trigger shuffle after options load
-    const observer = new MutationObserver(() => shuffleOptions());
-    observer.observe(document.getElementById("options"), { childList: true });
+    // Example simulation (replace with actual game engine)
+    document.addEventListener("DOMContentLoaded", () => {
+      const opts = ["উত্তর A", "উত্তর B", "উত্তর C", "উত্তর D"];
+      const optionBox = document.getElementById("options");
+      opts.forEach(o => {
+        const btn = document.createElement("button");
+        btn.innerText = o;
+        optionBox.appendChild(btn);
+      });
+      shuffleOptions();
+    });
   </script>
-  <script src="engine.js"></script>
-  <script src="script.js" defer></script>
 </body>
 </html>

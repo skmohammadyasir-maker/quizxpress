@@ -19,130 +19,25 @@
       --neon-gold: #ffcc00;
       --text-light: #f1f1f1;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Noto Sans Bengali', sans-serif;
-    }
-
-    body {
-      background: radial-gradient(circle at top, #111827, #000);
-      color: var(--text-light);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header.top {
-      background: #000;
-      border-bottom: 3px solid var(--neon-blue);
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 0 10px var(--neon-blue);
-    }
-
-    .title {
-      font-size: 1.5rem;
-      color: var(--neon-gold);
-      font-weight: 700;
-      text-shadow: 0 0 10px var(--neon-gold);
-    }
-
-    .stat { margin-left: 14px; font-size: 0.9rem; }
-
-    main.card {
-      background: rgba(20, 20, 30, 0.9);
-      max-width: 850px;
-      width: 90%;
-      margin: 25px auto;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 0 15px rgba(0,255,255,0.3);
-    }
-
-    .question-text {
-      font-size: 1.2rem;
-      margin-bottom: 16px;
-      text-align: center;
-      color: var(--neon-gold);
-      text-shadow: 0 0 5px var(--neon-gold);
-    }
-
-    .options-grid {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-    .options-grid button {
-      background: linear-gradient(90deg, #002b36, #004d66);
-      color: #fff;
-      border: 2px solid var(--neon-blue);
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .options-grid button:hover {
-      background: var(--neon-blue);
-      color: #000;
-      box-shadow: 0 0 12px var(--neon-blue);
-      transform: scale(1.05);
-    }
-
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 18px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      background: var(--neon-blue);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .btn:hover { background: var(--neon-gold); transform: scale(1.1); }
-
-    .btn.yellow { background: var(--neon-gold); }
-
-    footer.foot {
-      background: #000;
-      color: var(--neon-blue);
-      text-align: center;
-      padding: 16px;
-      margin-top: auto;
-      border-top: 3px solid var(--neon-gold);
-      box-shadow: 0 -2px 10px var(--neon-blue);
-      font-size: 0.9rem;
-    }
-
-    .modal-card {
-      background: rgba(15, 15, 25, 0.95);
-      border: 2px solid var(--neon-blue);
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      color: var(--neon-gold);
-    }
-
-    .modal.hidden { display: none; }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans Bengali',sans-serif;}
+    body{background:radial-gradient(circle at top,#111827,#000);color:var(--text-light);min-height:100vh;display:flex;flex-direction:column;}
+    header.top{background:#000;border-bottom:3px solid var(--neon-blue);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 10px var(--neon-blue);}
+    .title{font-size:1.5rem;color:var(--neon-gold);font-weight:700;text-shadow:0 0 10px var(--neon-gold);}
+    .stat{margin-left:14px;font-size:.9rem;}
+    main.card{background:rgba(20,20,30,.9);max-width:850px;width:90%;margin:25px auto;padding:20px;border-radius:14px;box-shadow:0 0 15px rgba(0,255,255,.3);}
+    .question-text{font-size:1.2rem;margin-bottom:16px;text-align:center;color:var(--neon-gold);text-shadow:0 0 5px var(--neon-gold);}
+    .options-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+    .options-grid button{background:linear-gradient(90deg,#002b36,#004d66);color:#fff;border:2px solid var(--neon-blue);border-radius:10px;padding:10px;font-size:1rem;cursor:pointer;transition:.3s;}
+    .options-grid button:hover{background:var(--neon-blue);color:#000;box-shadow:0 0 12px var(--neon-blue);transform:scale(1.05);}
+    .controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap;}
+    .btn{background:var(--neon-blue);color:#000;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600;transition:.3s;}
+    .btn:hover{background:var(--neon-gold);transform:scale(1.1);}
+    .btn.yellow{background:var(--neon-gold);}
+    footer.foot{background:#000;color:var(--neon-blue);text-align:center;padding:16px;margin-top:auto;border-top:3px solid var(--neon-gold);box-shadow:0 -2px 10px var(--neon-blue);font-size:.9rem;}
+    .modal-card{background:rgba(15,15,25,.95);border:2px solid var(--neon-blue);padding:25px;border-radius:12px;text-align:center;color:var(--neon-gold);}
+    .modal.hidden{display:none;}
   </style>
 </head>
-
 <body>
   <div class="app">
     <header class="top">
@@ -163,7 +58,6 @@
 
       <div class="question-box">
         <div id="question" class="question-text">প্রশ্ন লোড হচ্ছে...</div>
-        <div id="hint" class="hint hidden"></div>
         <div id="options" class="options-grid"></div>
       </div>
 
@@ -204,7 +98,63 @@
 
   <!-- ✅ JavaScript -->
   <script>
-    // Randomize answer options each time
+    async function loadQuestions() {
+      try {
+        const res = await fetch("questions.json");
+        const data = await res.json();
+
+        if (!data || data.length === 0) {
+          document.getElementById("question").innerText = "❌ কোনো প্রশ্ন পাওয়া যায়নি!";
+          return;
+        }
+
+        let index = 0;
+        const questionText = document.getElementById("question");
+        const optionsBox = document.getElementById("options");
+        const qIndex = document.getElementById("qIndex");
+        const qTotal = document.getElementById("qTotal");
+        const qTotal2 = document.getElementById("qTotal2");
+
+        qTotal.textContent = data.length;
+        qTotal2.textContent = data.length;
+
+        function showQuestion(i) {
+          const q = data[i];
+          questionText.textContent = q.question;
+          optionsBox.innerHTML = "";
+          q.options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.textContent = opt;
+            btn.onclick = () => {
+              if (opt === q.answer) {
+                btn.style.background = "#00e676";
+              } else {
+                btn.style.background = "#ff1744";
+              }
+              setTimeout(() => {
+                index++;
+                if (index < data.length) {
+                  showQuestion(index);
+                } else {
+                  questionText.textContent = "🎯 সব প্রশ্ন শেষ!";
+                  optionsBox.innerHTML = "";
+                }
+                qIndex.textContent = index + 1;
+              }, 800);
+            };
+            optionsBox.appendChild(btn);
+          });
+          qIndex.textContent = i + 1;
+          shuffleOptions();
+        }
+
+        showQuestion(index);
+      } catch (err) {
+        document.getElementById("question").innerText = "⚠️ প্রশ্ন লোড করতে সমস্যা হয়েছে!";
+        console.error(err);
+      }
+    }
+
     function shuffleOptions() {
       const container = document.getElementById('options');
       for (let i = container.children.length; i >= 0; i--) {
@@ -212,17 +162,7 @@
       }
     }
 
-    // Example simulation (replace with actual game engine)
-    document.addEventListener("DOMContentLoaded", () => {
-      const opts = ["উত্তর A", "উত্তর B", "উত্তর C", "উত্তর D"];
-      const optionBox = document.getElementById("options");
-      opts.forEach(o => {
-        const btn = document.createElement("button");
-        btn.innerText = o;
-        optionBox.appendChild(btn);
-      });
-      shuffleOptions();
-    });
+    document.addEventListener("DOMContentLoaded", loadQuestions);
   </script>
 </body>
 </html>

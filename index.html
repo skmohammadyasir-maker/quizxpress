@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Black Force 007 — Quiz</title>
+  <title>Black Force 007 — Quiz Game</title>
 
   <!-- ✅ Google AdSense -->
+  <meta name="description" content="Play fun Bengali quiz games with Black Force 007! Test your mind and win points.">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8486825272017960"
      crossorigin="anonymous"></script>
 
@@ -23,141 +24,184 @@
     body{background:radial-gradient(circle at top,#111827,#000);color:var(--text-light);min-height:100vh;display:flex;flex-direction:column;}
     header.top{background:#000;border-bottom:3px solid var(--neon-blue);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 0 10px var(--neon-blue);}
     .title{font-size:1.5rem;color:var(--neon-gold);font-weight:700;text-shadow:0 0 10px var(--neon-gold);}
-    .stat{margin-left:14px;font-size:.9rem;}
     main.card{background:rgba(20,20,30,.9);max-width:850px;width:90%;margin:25px auto;padding:20px;border-radius:14px;box-shadow:0 0 15px rgba(0,255,255,.3);}
     .question-text{font-size:1.2rem;margin-bottom:16px;text-align:center;color:var(--neon-gold);text-shadow:0 0 5px var(--neon-gold);}
     .options-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
     .options-grid button{background:linear-gradient(90deg,#002b36,#004d66);color:#fff;border:2px solid var(--neon-blue);border-radius:10px;padding:10px;font-size:1rem;cursor:pointer;transition:.3s;}
     .options-grid button:hover{background:var(--neon-blue);color:#000;box-shadow:0 0 12px var(--neon-blue);transform:scale(1.05);}
-    .controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap;}
+    .stats{display:flex;justify-content:space-around;margin-bottom:12px;font-size:1rem;}
     .btn{background:var(--neon-blue);color:#000;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600;transition:.3s;}
     .btn:hover{background:var(--neon-gold);transform:scale(1.1);}
-    .btn.yellow{background:var(--neon-gold);}
-    footer.foot{background:#000;color:var(--neon-blue);text-align:center;padding:16px;margin-top:auto;border-top:3px solid var(--neon-gold);box-shadow:0 -2px 10px var(--neon-blue);font-size:.9rem;}
-    .modal-card{background:rgba(15,15,25,.95);border:2px solid var(--neon-blue);padding:25px;border-radius:12px;text-align:center;color:var(--neon-gold);}
-    .modal.hidden{display:none;}
+    .hidden{display:none;}
+    footer{background:#000;color:var(--neon-blue);text-align:center;padding:16px;margin-top:auto;border-top:3px solid var(--neon-gold);}
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="top">
-      <h1 class="title">🎮 Black Force 007</h1>
-      <div class="top-right">
-        <div class="stat">প্রশ্ন: <span id="qTotal">0</span></div>
-        <div class="stat">⏱ সময়: <span id="time">15</span>s</div>
-      </div>
-    </header>
+  <header class="top">
+    <h1 class="title">🎮 Black Force 007 — Quiz</h1>
+    <div>🔢 প্রশ্ন: <span id="qIndex">0</span>/<span id="qTotal">0</span></div>
+  </header>
 
-    <main class="card quiz-container">
-      <div id="stats" class="stats-row">
-        <div class="stat">✅ সঠিক: <strong id="stat-correct">0</strong></div>
-        <div class="stat">❌ ভুল: <strong id="stat-wrong">0</strong></div>
-        <div class="stat">🔢 পয়েন্ট: <strong id="stat-score">0</strong></div>
-        <div class="stat">💰 কয়েন: <strong id="stat-coins">0</strong></div>
-      </div>
-
-      <div class="question-box">
-        <div id="question" class="question-text">প্রশ্ন লোড হচ্ছে...</div>
-        <div id="options" class="options-grid"></div>
-      </div>
-
-      <div class="controls">
-        <div class="left-controls">
-          <div class="progress">প্রশ্ন <span id="qIndex">0</span>/<span id="qTotal2">0</span></div>
-        </div>
-      </div>
-    </main>
-
-    <div id="result-screen" class="modal hidden">
-      <div class="modal-card">
-        <h2>🎯 গেম শেষ!</h2>
-        <p>সঠিক: <strong id="final-correct">0</strong></p>
-        <p>ভুল: <strong id="final-wrong">0</strong></p>
-        <p>মোট পয়েন্ট: <strong id="final-score">0</strong></p>
-        <div style="margin-top:14px;">
-          <button id="playAgain" class="btn yellow">🔁 আবার খেলুন</button>
-        </div>
-      </div>
+  <main class="card">
+    <div class="stats">
+      ✅ সঠিক: <strong id="correct">0</strong>
+      ❌ ভুল: <strong id="wrong">0</strong>
+      💰 স্কোর: <strong id="score">0</strong>
     </div>
 
-    <footer class="foot">
-      <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved</p>
-      <small>🎵 সাউন্ড রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
-    </footer>
-  </div>
+    <div class="question-box">
+      <div id="question" class="question-text">প্রশ্ন লোড হচ্ছে...</div>
+      <div id="options" class="options-grid"></div>
+    </div>
 
-  <!-- ✅ JavaScript -->
+    <div style="text-align:center;margin-top:15px;">
+      <button id="nextBtn" class="btn hidden">⏭️ পরের প্রশ্ন</button>
+      <button id="restartBtn" class="btn hidden">🔁 আবার খেলুন</button>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 <strong>Black Force 007</strong> | All Rights Reserved
+  </footer>
+
+  <!-- ✅ Game Script -->
   <script>
-    async function loadQuestions() {
-      const questionText = document.getElementById("question");
-      const optionsBox = document.getElementById("options");
-      const qIndex = document.getElementById("qIndex");
-      const qTotal = document.getElementById("qTotal");
-      const qTotal2 = document.getElementById("qTotal2");
+  // === প্রশ্ন তালিকা ===
+  const QUESTIONS = [
+    // 🔹 পূর্বের ৪০টি প্রশ্ন
+    {id:1,q:'নিচের কোনটি সাধারণত বিশ্বাসভঙ্গকে নির্দেশ করে?',options:['দালাল','সাহায্য','দয়া','নিবেদন'],a:0},
+    {id:2,q:'কোন শব্দটি লোভ বা সুবিধা নেওয়ার অর্থ বহন করে?',options:['চামচা','ত্যাগ','মমতা','নিষ্ঠা'],a:0},
+    {id:3,q:'নিচের কোনটি নেতিবাচক আচরণ — অন্যের সম্পর্কে গোপন আলোচনা?',options:['পরচর্চা','উৎসাহ','সহযোগীতা','আশারাজি'],a:0},
+    {id:4,q:'কোনটি অন্যের প্রতি খারাপ ইচ্ছা বা ক্ষতি কামনায় ব্যবহৃত হয়?',options:['হিংসা','ভালোবাসা','সাহায্য','রাগ'],a:0},
+    {id:5,q:'কোন শব্দটি অনুচিতভাবে প্রভাবিত করার জন্য অর্থবচন করে?',options:['দালাল','নাগরিক','শিক্ষক','চিকিৎসক'],a:0},
+    {id:6,q:'কোনটি সত্য কথা লুকিয়ে রাখে?',options:['চামচা','সৎ','সহানুভূতিশীল','মিষ্টভাষী'],a:0},
+    {id:7,q:'কোনটি অন্যকে অনৈতিকভাবে সুবিধা দেয়?',options:['ফরমায়েশ','সহযোগিতা','বিনয়','ত্যাগ'],a:0},
+    {id:8,q:'অন্যের সাফল্যে মন খারাপ হলে সেটি কী?',options:['হিংসা','শান্তি','সহানুভূতি','আনন্দ'],a:0},
+    {id:9,q:'কোনটি গোপনে কুৎসা ছড়ানো বোঝায়?',options:['পরচর্চা','আশা','নিষ্ঠা','সাহস'],a:0},
+    {id:10,q:'দলের সাথে কাজ করাকে কী বলে?',options:['সহযোগিতা','অলসতা','হিংসা','ভয়'],a:0},
+    // 🔹 নতুন ৪০ প্রশ্ন
+    {id:41,q:'বাংলাদেশের রাজধানী কোনটি?',options:['ঢাকা','চট্টগ্রাম','রাজশাহী','খুলনা'],a:0},
+    {id:42,q:'ভারতের জাতীয় পশু কোনটি?',options:['বাঘ','সিংহ','হাতি','গরু'],a:0},
+    {id:43,q:'তাজমহল কোথায় অবস্থিত?',options:['আগ্রা','দিল্লি','জয়পুর','মুম্বাই'],a:0},
+    {id:44,q:'মানুষের হৃদয় কোথায় থাকে?',options:['বাম দিকে','ডান দিকে','মাঝখানে','উপরের দিকে'],a:0},
+    {id:45,q:'বাংলা বর্ণমালায় কতটি স্বরবর্ণ আছে?',options:['১১','১০','১২','৭'],a:0},
+    {id:46,q:'মানুষের দাঁতের সংখ্যা কত?',options:['৩২','৩০','২৮','৩৬'],a:0},
+    {id:47,q:'রবীন্দ্রনাথ ঠাকুর কোন পুরস্কার পান?',options:['নোবেল পুরস্কার','অস্কার','গ্র্যামি','পদ্মভূষণ'],a:0},
+    {id:48,q:'বাংলাদেশের মুদ্রার নাম কী?',options:['টাকা','রুপি','ইয়েন','ডলার'],a:0},
+    {id:49,q:'পৃথিবীর বৃহত্তম মহাসাগর কোনটি?',options:['প্রশান্ত','আটলান্টিক','আর্কটিক','ভারতীয়'],a:0},
+    {id:50,q:'মানবদেহে রক্ত সঞ্চালন কে নিয়ন্ত্রণ করে?',options:['হৃদয়','যকৃত','মস্তিষ্ক','ফুসফুস'],a:0},
+    {id:51,q:'বাংলাদেশের জাতীয় ফুল কোনটি?',options:['শাপলা','গোলাপ','জবা','সূর্যমুখী'],a:0},
+    {id:52,q:'পৃথিবীর উপগ্রহ কোনটি?',options:['চাঁদ','সূর্য','মঙ্গল','শুক্র'],a:0},
+    {id:53,q:'মানবদেহের শক্তির উৎস কী?',options:['খাবার','বায়ু','জল','আলো'],a:0},
+    {id:54,q:'বাংলাদেশের জাতীয় ফল কী?',options:['কাঁঠাল','আম','লিচু','আনারস'],a:0},
+    {id:55,q:'সৌরজগতের কেন্দ্রে কী আছে?',options:['সূর্য','পৃথিবী','বুধ','চাঁদ'],a:0},
+    {id:56,q:'বাংলাদেশের স্বাধীনতার বছর কোনটি?',options:['১৯৭১','১৯৬৫','১৯৪৭','১৯৭৫'],a:0},
+    {id:57,q:'কম্পিউটারের জনক কে?',options:['চার্লস ব্যাবেজ','আইজ্যাক নিউটন','গ্যালিলিও','টমাস এডিসন'],a:0},
+    {id:58,q:'সূর্যের সবচেয়ে কাছের গ্রহ কোনটি?',options:['বুধ','পৃথিবী','মঙ্গল','শুক্র'],a:0},
+    {id:59,q:'বাংলাদেশের জাতীয় কবি কে?',options:['কাজী নজরুল ইসলাম','রবীন্দ্রনাথ ঠাকুর','জসীম উদ্দিন','সুকান্ত'],a:0},
+    {id:60,q:'পানির রাসায়নিক সংকেত কী?',options:['H₂O','O₂','CO₂','NaCl'],a:0},
+    {id:61,q:'পৃথিবীতে মোট কয়টি মহাদেশ আছে?',options:['৭','৫','৬','৮'],a:0},
+    {id:62,q:'সূর্যের আলো পৃথিবীতে আসতে কত সময় লাগে?',options:['৮ মিনিট','১ ঘণ্টা','১ মিনিট','১০ সেকেন্ড'],a:0},
+    {id:63,q:'পৃথিবীর সর্বোচ্চ পর্বত কোনটি?',options:['এভারেস্ট','আল্পস','কাঞ্চনজঙ্ঘা','নন্দাদেবী'],a:0},
+    {id:64,q:'ভারতের জাতীয় খেলা কোনটি?',options:['হকি','ক্রিকেট','ফুটবল','ব্যাডমিন্টন'],a:0},
+    {id:65,q:'বাংলাদেশের জাতীয় প্রাণী কোনটি?',options:['রয়েল বেঙ্গল টাইগার','হাতি','হরিণ','গরু'],a:0},
+    {id:66,q:'পৃথিবীর সবচেয়ে বড় দেশ কোনটি?',options:['রাশিয়া','চীন','ভারত','আমেরিকা'],a:0},
+    {id:67,q:'মানুষের চোখের জন্য কোন ভিটামিন দরকার?',options:['ভিটামিন A','ভিটামিন C','ভিটামিন D','ভিটামিন E'],a:0},
+    {id:68,q:'বাংলাদেশের জাতীয় সংগীত কে লিখেছেন?',options:['রবীন্দ্রনাথ ঠাকুর','কাজী নজরুল','লালন ফকির','হাসান রাজা'],a:0},
+    {id:69,q:'পৃথিবীর সবচেয়ে ঠান্ডা স্থান কোনটি?',options:['অ্যান্টার্কটিকা','সাইবেরিয়া','আলাস্কা','নরওয়ে'],a:0},
+    {id:70,q:'মানবদেহের রক্তের রঙ কেন লাল?',options:['হিমোগ্লোবিন','অক্সিজেন','লবণ','লোহা'],a:0},
+    {id:71,q:'বাংলাদেশের সর্ববৃহৎ জেলা কোনটি?',options:['রাঙ্গামাটি','ঢাকা','সিলেট','খুলনা'],a:0},
+    {id:72,q:'বাংলাদেশের স্বাধীনতা দিবস কবে?',options:['২৬ মার্চ','১৬ ডিসেম্বর','১৪ এপ্রিল','২১ ফেব্রুয়ারি'],a:0},
+    {id:73,q:'মানুষের শ্বাস নেওয়ার জন্য কোন গ্যাস লাগে?',options:['অক্সিজেন','কার্বন ডাই-অক্সাইড','হাইড্রোজেন','নাইট্রোজেন'],a:0},
+    {id:74,q:'বাংলাদেশের জাতীয় বৃক্ষ কোনটি?',options:['আমগাছ','নারকেলগাছ','বটগাছ','কাঁঠালগাছ'],a:2},
+    {id:75,q:'বাংলা নববর্ষ কবে পালিত হয়?',options:['১৪ এপ্রিল','২১ ফেব্রুয়ারি','১৬ ডিসেম্বর','২৬ মার্চ'],a:0},
+    {id:76,q:'মানুষের শরীরে সবচেয়ে বড় অঙ্গ কোনটি?',options:['চামড়া','হৃদয়','যকৃত','ফুসফুস'],a:0},
+    {id:77,q:'সূর্যের প্রধান গ্যাস কোনটি?',options:['হাইড্রোজেন','অক্সিজেন','নাইট্রোজেন','আর্গন'],a:0},
+    {id:78,q:'পৃথিবীর সবচেয়ে গভীর মহাসাগর কোনটি?',options:['প্রশান্ত','আটলান্টিক','ভারতীয়','আর্কটিক'],a:0},
+    {id:79,q:'বাংলাদেশের জাতীয় পতাকায় কী রঙ আছে?',options:['লাল ও সবুজ','নীল ও সাদা','লাল ও হলুদ','কালো ও লাল'],a:0},
+    {id:80,q:'বাংলাদেশের প্রথম রাষ্ট্রপতি কে?',options:['শেখ মুজিবুর রহমান','জিয়াউর রহমান','ইয়াহিয়া খান','ইন্দিরা গান্ধী'],a:0}
+  ];
 
-      try {
-        const res = await fetch("questions.json?" + new Date().getTime()); // prevent cache
-        if (!res.ok) throw new Error("File not found");
-        const data = await res.json();
+  // === গেম লজিক ===
+  let index = 0, correct = 0, wrong = 0, score = 0;
 
-        if (!Array.isArray(data) || data.length === 0) {
-          questionText.textContent = "❌ কোনো প্রশ্ন পাওয়া যায়নি!";
-          return;
-        }
+  const questionText = document.getElementById("question");
+  const optionsBox = document.getElementById("options");
+  const qIndex = document.getElementById("qIndex");
+  const qTotal = document.getElementById("qTotal");
+  const correctBox = document.getElementById("correct");
+  const wrongBox = document.getElementById("wrong");
+  const scoreBox = document.getElementById("score");
+  const nextBtn = document.getElementById("nextBtn");
+  const restartBtn = document.getElementById("restartBtn");
 
-        startQuiz(data);
-      } catch (err) {
-        console.warn("⚠️ JSON লোড ব্যর্থ, fallback প্রশ্ন ব্যবহার হচ্ছে।", err);
+  function startGame(){
+    index=0; correct=0; wrong=0; score=0;
+    qTotal.textContent = QUESTIONS.length;
+    showQuestion();
+    nextBtn.classList.add("hidden");
+    restartBtn.classList.add("hidden");
+  }
 
-        const fallback = [
-          {
-            question: "ভারতের রাজধানী কোনটি?",
-            options: ["কলকাতা", "দিল্লি", "মুম্বাই", "চেন্নাই"],
-            answer: "দিল্লি"
-          },
-          {
-            question: "বাংলাদেশের মুদ্রার নাম কী?",
-            options: ["রুপি", "ডলার", "টাকা", "পাউন্ড"],
-            answer: "টাকা"
-          }
-        ];
-        startQuiz(fallback);
-      }
+  function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [array[i],array[j]]=[array[j],array[i]];
+    }
+  }
 
-      function startQuiz(data) {
-        let index = 0;
-        qTotal.textContent = data.length;
-        qTotal2.textContent = data.length;
-        showQuestion();
+  function showQuestion(){
+    const q = QUESTIONS[index];
+    qIndex.textContent = index + 1;
+    questionText.textContent = q.q;
+    const shuffled = [...q.options].map((opt,i)=>({opt,i}));
+    shuffle(shuffled);
+    optionsBox.innerHTML = "";
+    shuffled.forEach(({opt,i}) => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(i, q.a, btn);
+      optionsBox.appendChild(btn);
+    });
+  }
 
-        function showQuestion() {
-          const q = data[index];
-          questionText.textContent = q.question;
-          optionsBox.innerHTML = "";
-          q.options.sort(() => Math.random() - 0.5);
-          q.options.forEach(opt => {
-            const btn = document.createElement("button");
-            btn.textContent = opt;
-            btn.onclick = () => {
-              btn.style.background = opt === q.answer ? "#00e676" : "#ff1744";
-              setTimeout(() => {
-                index++;
-                if (index < data.length) showQuestion();
-                else {
-                  questionText.textContent = "🎯 সব প্রশ্ন শেষ!";
-                  optionsBox.innerHTML = "";
-                }
-                qIndex.textContent = index + 1;
-              }, 700);
-            };
-            optionsBox.appendChild(btn);
-          });
-          qIndex.textContent = index + 1;
-        }
-      }
+  function checkAnswer(selected, correctAns, btn){
+    const allBtns = optionsBox.querySelectorAll("button");
+    allBtns.forEach(b=>b.disabled=true);
+
+    if(selected === correctAns){
+      btn.style.background="#00e676";
+      correct++; score+=5;
+    } else {
+      btn.style.background="#ff1744";
+      wrong++;
     }
 
-    document.addEventListener("DOMContentLoaded", loadQuestions);
+    correctBox.textContent=correct;
+    wrongBox.textContent=wrong;
+    scoreBox.textContent=score;
+    nextBtn.classList.remove("hidden");
+  }
+
+  nextBtn.addEventListener("click",()=>{
+    index++;
+    if(index < QUESTIONS.length){
+      showQuestion();
+      nextBtn.classList.add("hidden");
+    }else{
+      endGame();
+    }
+  });
+
+  function endGame(){
+    questionText.textContent = `🎯 গেম শেষ! মোট স্কোর: ${score}`;
+    optionsBox.innerHTML = "";
+    nextBtn.classList.add("hidden");
+    restartBtn.classList.remove("hidden");
+  }
+
+  restartBtn.addEventListener("click",startGame);
+  document.addEventListener("DOMContentLoaded",startGame);
   </script>
 </body>
 </html>

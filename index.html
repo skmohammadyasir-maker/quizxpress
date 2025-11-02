@@ -3,21 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Black Force 007 — Quiz</title>
+  <title>Black Force 007 — QuizXpress</title>
 
   <!-- ✅ Google AdSense Verification -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8486825272017960"
      crossorigin="anonymous"></script>
 
-  <!-- Noto Sans Bengali -->
+  <!-- ✅ Google Font: Noto Sans Bengali -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- ✅ Main CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      margin: 0;
+      background: #f4f7fb;
+      color: #222;
+    }
+    header.top {
+      background: #111;
+      color: #fff;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title { font-size: 1.4rem; font-weight: 700; }
+    .stat { margin-left: 12px; font-size: 0.9rem; }
+    main.card {
+      background: #fff;
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .btn.yellow { background: #ffb400; color: #000; }
+    footer.foot {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 16px;
+      font-size: 0.85rem;
+      border-top: 3px solid #ffb400;
+    }
+    footer.foot a {
+      color: #ffb400;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
   <div class="app">
     <header class="top">
-      <h1 class="title">Black Force 007</h1>
+      <h1 class="title">🧠 Black Force 007 Quiz</h1>
       <div class="top-right">
         <div class="stat small">প্রশ্ন: <span id="qTotal">0</span></div>
         <div class="stat small">সময়: <span id="time">15</span>s</div>
@@ -43,7 +100,7 @@
           <div class="progress">প্রশ্ন <span id="qIndex">0</span>/<span id="qTotal2">0</span></div>
           <div class="lifelines">
             <button id="fiftyBtn" class="btn small">50-50</button>
-            <button id="hintBtn" class="btn small">Hint</button>
+            <button id="hintBtn" class="btn small">Hint 💡</button>
             <button id="skipBtn" class="btn small yellow">Skip ⏭</button>
           </div>
         </div>
@@ -69,11 +126,17 @@
     </div>
 
     <footer class="foot">
-      <small>সাউন্ড: sounds/ মধ্যে correct.mp3, wrong.mp3, click.mp3 রাখুন।</small>
+      <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved.</p>
+      <p>
+        📜 <a href="privacy.html" target="_blank">Privacy Policy</a> |
+        📧 <a href="mailto:skmohammadyasir@gmail.com">Contact</a> |
+        🎮 Game by <strong>QuizXpress</strong>
+      </p>
+      <small>🔊 সাউন্ড ফাইল রাখুন: <code>sounds/correct.mp3</code>, <code>wrong.mp3</code>, <code>click.mp3</code></small>
     </footer>
   </div>
 
-  <!-- Load questions first -->
+  <!-- ✅ JavaScript Files -->
   <script src="questions.js"></script>
   <script src="engine.js"></script>
   <script src="script.js" defer></script>

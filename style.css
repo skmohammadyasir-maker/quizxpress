@@ -1,86 +1,55 @@
-/* ===============================
-   🎨 QuizXpress Styles
-   =============================== */
-
-body {
-  font-family: 'Noto Sans Bengali', sans-serif;
-  background: #f8f9fa;
-  color: #222;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+/* style.css - আপনার existing style এর সাথে add করতে পারেন */
+.options-grid button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
-#gameBox, #resultBox {
-  max-width: 600px;
-  margin: 20px auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 20px;
+.options-grid button.correct {
+  background: linear-gradient(90deg, #00c853, #009624) !important;
+  color: #fff !important;
+  border: 2px solid #00c853 !important;
 }
 
-#questionBox {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+.options-grid button.wrong {
+  background: linear-gradient(90deg, #ff1744, #d50000) !important;
+  color: #fff !important;
+  border: 2px solid #ff1744 !important;
 }
 
-.option-table {
-  width: 100%;
-  border-spacing: 10px;
+/* Responsive design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.3rem;
+  }
+  
+  .question-text {
+    font-size: 1.1rem;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  main.card {
+    margin: 15px auto;
+    padding: 15px;
+  }
 }
 
-.option-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 12px;
-  background: #e9ecef;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.option-btn:hover {
-  background: #dee2e6;
-}
-
-.option-btn.correct {
-  background: #28a745 !important;
-  color: #fff;
-  font-weight: 700;
-  transform: scale(1.05);
-}
-
-.option-btn.wrong {
-  background: #dc3545 !important;
-  color: #fff;
-  font-weight: 700;
-  transform: scale(1.05);
-}
-
-#timer, #score {
-  font-size: 1.1rem;
-  margin: 8px 0;
-  font-weight: 600;
-}
-
-#startScreen, #resultBox {
-  display: none;
-}
-
-button#startBtn {
-  padding: 12px 30px;
-  font-size: 1.2rem;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button#startBtn:hover {
-  background: #0056b3;
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .stats {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  header.top {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
 }

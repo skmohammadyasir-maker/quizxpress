@@ -1,4 +1,4 @@
-// ===== UI glue =====
+// UI Elements
 const qTotalEl = document.getElementById('qTotal');
 const qTotal2El = document.getElementById('qTotal2');
 const qIndexEl = document.getElementById('qIndex');
@@ -22,58 +22,52 @@ const skipBtn = document.getElementById('skipBtn');
 const hintEl = document.getElementById('hint');
 const soundToggle = document.getElementById('soundToggle');
 
-// ===== Sound =====
 let soundsOn = true;
 const sounds = {
   click: new Audio('sounds/click.mp3'),
   correct: new Audio('sounds/correct.mp3'),
   wrong: new Audio('sounds/wrong.mp3')
 };
-function playSound(name) {
-  if (!soundsOn) return;
+function playSound(name){
+  if(!soundsOn) return;
   const s = sounds[name];
-  if (s) { s.currentTime = 0; s.play().catch(() => {}); }
+  if(s){ s.currentTime=0; s.play().catch(()=>{}); }
 }
 
-// ===== Game Engine =====
+// Initialize engine
 const engine = new GameEngine({
   questions: QUESTIONS,
-  total: 40,
+  total: QUESTIONS.length,
   timePerQ: 15,
   coinsPerCorrect: 5,
   skipPenalty: 0
 });
 
-function renderStats() {
+function renderStats(){
   qTotalEl.textContent = engine.total;
-  qTotal2El.textContent = engine.total;
-  qIndexEl.textContent = Math.min(engine.index + 1, engine.total);
+  qIndexEl.textContent = Math.min(engine.index+1, engine.total);
   statCorrect.textContent = engine.correct;
   statWrong.textContent = engine.wrong;
   statScore.textContent = engine.score;
   statCoins.textContent = engine.coins;
 }
 
-function renderQuestion() {
+function renderQuestion(){
   const q = engine.current();
-  optionsEl.innerHTML = '';
+  optionsEl.innerHTML='';
   hintEl.classList.add('hidden');
-  hintEl.textContent = '';
-
-  if (!q) {
-    finishGame();
-    return;
-  }
+  hintEl.textContent='';
+  if(!q){ finishGame(); return; }
 
   questionEl.textContent = q.q;
-  optionsEl.className = 'options-grid'; // ✅ grid layout
+  optionsEl.className = 'options-grid';
 
-  q.options.forEach((opt, i) => {
+  q.options.forEach((opt,i)=>{
     const b = document.createElement('div');
     b.className = 'option';
     b.dataset.index = i;
     b.textContent = opt;
-    b.addEventListener('click', () => onOptionClick(i, b));
+    b.onclick = () => onOptionClick(i,b);
     optionsEl.appendChild(b);
   });
 
@@ -83,106 +77,88 @@ function renderQuestion() {
 
 let optionClickable = true;
 
-function onOptionClick(i, btnEl) {
-  if (!optionClickable) return;
-  optionClickable = false;
+function onOptionClick(i,btnEl){
+  if(!optionClickable) return;
+  optionClickable=false;
   engine.stopTimer();
-
   const res = engine.answer(i);
-
-  if (res.correct) {
+  if(res.correct){
     btnEl.classList.add('correct');
     playSound('correct');
   } else {
     btnEl.classList.add('wrong');
     playSound('wrong');
-    const correctIndex = engine.questions[engine.index - 1]?.a;
-    if (correctIndex != null) {
-      const el = [...optionsEl.children].find(x => +x.dataset.index === correctIndex);
-      if (el) el.classList.add('correct');
+    const correctIndex = engine.questions[engine.index-1]?.a;
+    if(correctIndex!=null){
+      const el = [...optionsEl.children].find(x=>+x.dataset.index===correctIndex);
+      if(el) el.classList.add('correct');
     }
   }
-
-  setTimeout(() => {
-    optionClickable = true;
-    if (engine.isFinished()) finishGame();
+  setTimeout(()=>{
+    optionClickable=true;
+    if(engine.isFinished()) finishGame();
     else renderQuestion();
-  }, 1000);
+  },1000);
 }
 
-function startQTimer() {
+function startQTimer(){
   timerEl.textContent = engine.timePerQ;
-  engine.startTimer(
-    t => (timerEl.textContent = t),
-    () => {
-      playSound('wrong');
-      engine.wrong++;
-      engine.index++;
-      engine.streak = 0;
-      renderStats();
-      if (engine.isFinished()) finishGame();
-      else renderQuestion();
-    }
-  );
+  engine.startTimer((t)=>{ timerEl.textContent=t; },()=>{
+    playSound('wrong');
+    engine.wrong++;
+    engine.index++;
+    engine.streak=0;
+    renderStats();
+    if(engine.isFinished()) finishGame(); else renderQuestion();
+  });
 }
 
-function finishGame() {
+function finishGame(){
   engine.stopTimer();
   finalCorrect.textContent = engine.correct;
   finalWrong.textContent = engine.wrong;
   finalScore.textContent = engine.score;
   finalCoins.textContent = engine.coins;
-  const best = Math.max(parseInt(localStorage.getItem('bf_best') || 0), engine.score);
-  localStorage.setItem('bf_best', best);
+  const best = Math.max(parseInt(localStorage.getItem('best_score')||0), engine.score);
+  localStorage.setItem('best_score', best);
   bestScore.textContent = best;
   resultScreen.classList.remove('hidden');
 }
 
-playAgain.addEventListener('click', () => {
+playAgain.onclick = ()=>{
   resultScreen.classList.add('hidden');
   engine.reset();
   renderQuestion();
-});
+};
 
-fiftyBtn.addEventListener('click', () => {
+fiftyBtn.onclick = ()=>{
   playSound('click');
   const removed = engine.useFifty();
-  if (!removed) {
-    alert('50-50 আগেই ব্যবহৃত হয়েছে');
-    return;
+  if(!removed){ alert('50-50 আগেই ব্যবহৃত হয়েছে'); return; }
+  for(const idx of removed){
+    const el = [...optionsEl.children].find(x=>+x.dataset.index===idx);
+    if(el) el.style.visibility='hidden';
   }
-  for (const idx of removed) {
-    const el = [...optionsEl.children].find(x => +x.dataset.index === idx);
-    if (el) el.style.visibility = 'hidden';
-  }
-});
+};
 
-hintBtn.addEventListener('click', () => {
+hintBtn.onclick = ()=>{
   playSound('click');
   const hint = engine.useHint();
-  if (!hint) {
-    alert('Hint আগেই ব্যবহৃত হয়েছে');
-    return;
-  }
+  if(!hint){ alert('Hint আগেই ব্যবহৃত হয়েছে'); return; }
   hintEl.textContent = hint;
   hintEl.classList.remove('hidden');
-});
+};
 
-skipBtn.addEventListener('click', () => {
+skipBtn.onclick = ()=>{
   playSound('click');
   const ok = engine.useSkip();
-  if (!ok) {
-    alert('Skip আগেই ব্যবহৃত হয়েছে');
-    return;
-  }
-  if (engine.isFinished()) finishGame();
-  else renderQuestion();
-});
+  if(!ok){ alert('Skip আগেই ব্যবহৃত হয়েছে'); return; }
+  if(engine.isFinished()) finishGame(); else renderQuestion();
+};
 
-soundToggle.addEventListener('click', () => {
-  soundsOn = !soundsOn;
+soundToggle.onclick = ()=>{
+  soundsOn=!soundsOn;
   soundToggle.textContent = soundsOn ? '🔊' : '🔇';
-});
+};
 
-// ===== Start Game =====
 renderQuestion();

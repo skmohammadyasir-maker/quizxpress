@@ -1,4 +1,4 @@
-/* style.css - আপনার existing style এর সাথে add করতে পারেন */
+/* style.css */
 .options-grid button:disabled {
   cursor: not-allowed;
   opacity: 0.8;
@@ -14,6 +14,15 @@
   background: linear-gradient(90deg, #ff1744, #d50000) !important;
   color: #fff !important;
   border: 2px solid #ff1744 !important;
+}
+
+.hint-message {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive design */

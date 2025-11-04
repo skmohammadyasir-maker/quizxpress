@@ -1,4 +1,6 @@
-// Array of 40 questions (Bengali). Each question: { id, q, options:[], a: index, hint, category }
+// ✅ Black Force 007 — Bengali Quiz Questions
+// Each question: { id, q, options[], a (answer index), hint, category }
+
 const QUESTIONS = [
   {id:1,q:'নিচের কোনটি সাধারণত বিশ্বাসভঙ্গকে নির্দেশ করে?',options:['দালাল','সাহায্য','দয়া','নিবেদন'],a:0,hint:'কেউ যে বিশ্বাসঘাতকতা করে তাকে বলা হয়...',category:'বেহুবি'},
   {id:2,q:'কোন শব্দটি লোভ বা সুবিধা নেওয়ার অর্থ বহন করে?',options:['চামচা','ত্যাগ','মমতা','নিষ্ঠা'],a:0,hint:'কেউ যে প্রতিকূল পরিস্থিতিতে সুবিধা নেয়...',category:'চরিত্র'},

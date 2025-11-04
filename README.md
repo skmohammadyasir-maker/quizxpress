@@ -28,11 +28,11 @@ It’s designed with a clean UI, local scoring system, and lifelines — perfect
 ## 🕹️ How to Play
 
 1. Open the live link below  
-2. Click “Start” to begin the quiz  
+2. Click **“Start”** to begin the quiz  
 3. Use lifelines like **50-50** or **Skip** wisely  
 4. Earn coins and track your high score locally  
 
-🎯 [Play Now »](https://skmohammadyasir-maker.github.io/quizxpress/)
+🎯 **[Play Now »](https://skmohammadyasir-maker.github.io/quizxpress/)**
 
 ---
 

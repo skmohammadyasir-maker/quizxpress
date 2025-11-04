@@ -1,119 +1,91 @@
-:root {
-  --bg: #0f1724;
-  --card: #0b1220;
-  --accent: #fbbf24;
-  --muted: #94a3b8;
-  --glass: rgba(255, 255, 255, 0.03);
+/* ===============================
+   🎯 QuizXpress Script
+   Handles UI, game events, and rendering
+   =============================== */
+
+const qBox = document.getElementById("questionBox");
+const optionsEl = document.getElementById("options");
+const timerEl = document.getElementById("timer");
+const scoreEl = document.getElementById("score");
+const nextBtn = document.getElementById("nextBtn");
+const startBtn = document.getElementById("startBtn");
+const gameBox = document.getElementById("gameBox");
+const startScreen = document.getElementById("startScreen");
+const resultBox = document.getElementById("resultBox");
+const finalScore = document.getElementById("finalScore");
+
+let engine;
+
+function initGame() {
+  engine = new GameEngine({
+    questions: QUESTIONS,
+    total: 40,
+    timePerQ: 15,
+    coinsPerCorrect: 5
+  });
+  showQuestion();
 }
 
-* {
-  box-sizing: border-box;
-  font-family: 'Noto Sans Bengali', sans-serif;
-}
-
-body {
-  margin: 0;
-  background: linear-gradient(180deg, #071023 0%, #071a2b 100%);
-  color: #e6eef8;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.app {
-  width: 100%;
-  max-width: 860px;
-}
-
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
-  animation: fadeIn 0.3s ease;
-}
-
-.question-text {
-  font-size: 20px;
-  margin-bottom: 12px;
-}
-
-.options-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.option {
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.option:hover {
-  transform: scale(1.03);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.option.correct {
-  background: linear-gradient(90deg, #16a34a22, #16a34a33);
-  border-color: #16a34a88;
-}
-
-.option.wrong {
-  background: linear-gradient(90deg, #dc262622, #dc262633);
-  border-color: #dc262688;
-}
-
-.timer {
-  font-weight: 700;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.modal.hidden {
-  display: none;
-}
-
-.modal-card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 12px;
-  width: 320px;
-  text-align: center;
-}
-
-.btn {
-  background: var(--accent);
-  color: #06111a;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
+function showQuestion() {
+  const q = engine.current();
+  if (!q) {
+    showResult();
+    return;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+  qBox.innerText = q.q;
+
+  // Create option table
+  optionsEl.innerHTML = `
+    <table class="option-table">
+      ${q.options
+        .map(
+          (opt, i) =>
+            `<tr><td><button class="option-btn" data-index="${i}">${opt}</button></td></tr>`
+        )
+        .join("")}
+    </table>
+  `;
+
+  // Timer
+  engine.startTimer(
+    (t) => (timerEl.innerText = `⏳ ${t}s`),
+    () => handleAnswer(-1)
+  );
+
+  document.querySelectorAll(".option-btn").forEach((btn) => {
+    btn.onclick = () => handleAnswer(parseInt(btn.dataset.index));
+  });
 }
+
+function handleAnswer(index) {
+  engine.stopTimer();
+  const q = engine.current();
+  const result = engine.answer(index);
+  const buttons = document.querySelectorAll(".option-btn");
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.a) {
+      btn.classList.add("correct");
+    }
+    if (index === i && !result.correct) {
+      btn.classList.add("wrong");
+    }
+  });
+
+  scoreEl.innerText = `⭐ ${engine.score}`;
+  setTimeout(() => showQuestion(), 1200);
+}
+
+function showResult() {
+  gameBox.style.display = "none";
+  resultBox.style.display = "block";
+  finalScore.innerText = `${engine.score} Points`;
+}
+
+startBtn.onclick = () => {
+  startScreen.style.display = "none";
+  gameBox.style.display = "block";
+  initGame();
+};

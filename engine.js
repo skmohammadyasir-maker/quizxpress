@@ -24,10 +24,10 @@ class QuizEngine {
     
     if (isCorrect) {
       this.correctAnswers++;
-      this.score += 10; // প্রতিটি সঠিক উত্তরের জন্য 10 পয়েন্ট
+      this.score += 10;
     } else {
       this.wrongAnswers++;
-      this.score = Math.max(0, this.score - 5); // ভুল উত্তরে 5 পয়েন্ট কাটা, কিন্তু নেগেটিভ যাবে না
+      this.score = Math.max(0, this.score - 5);
     }
 
     return isCorrect;

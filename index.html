@@ -35,6 +35,7 @@
   <!-- ✅ Font -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
 
+  <!-- ✅ Styles -->
   <style>
     :root {
       --bg-dark: #090b13;
@@ -58,7 +59,7 @@
     footer{background:#000;color:var(--neon-blue);text-align:center;padding:16px;margin-top:auto;border-top:3px solid var(--neon-gold);}
     footer a{color:var(--neon-gold);text-decoration:none;margin:0 6px;}
     footer a:hover{text-decoration:underline;}
-    .about{background:#0d0d17;color:#ddd;padding:20px;text-align:center;font-size:0.95rem;line-height:1.5;border-radius:10px;margin:0 auto 25px auto;max-width:850px;}
+    .about-note{background:#0d0d17;color:#ddd;padding:20px;text-align:center;font-size:0.95rem;line-height:1.5;border-radius:10px;margin:0 auto 25px auto;max-width:850px;}
   </style>
 </head>
 <body>
@@ -66,9 +67,6 @@
     <h1 class="title">🎮 Black Force 007 — Quiz</h1>
     <div>🔢 প্রশ্ন: <span id="qIndex">0</span>/<span id="qTotal">0</span></div>
   </header>
-
- 
-  </section>
 
   <main class="card">
     <div class="stats">
@@ -89,85 +87,22 @@
   </main>
 
   <footer>
-  <section class="about-note">
-    <p><strong>Black Force 007</strong> একটি ফ্রি বাংলা কুইজ গেম, যা সমাজ, নৈতিকতা ও সাধারণ জ্ঞান শেখার মাধ্যমে চিন্তাশক্তি বাড়াতে সাহায্য করে।</p>
-  </section>
+    <section class="about-note">
+      <p><strong>Black Force 007</strong> একটি ফ্রি বাংলা কুইজ গেম, যা সমাজ, নৈতিকতা ও সাধারণ জ্ঞান শেখার মাধ্যমে চিন্তাশক্তি বাড়াতে সাহায্য করে।</p>
+    </section>
 
-  <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved</p>
-  
-  <p>
-    <a href="about.html">About</a> • 
-    <a href="privacy.html">Privacy Policy</a> • 
-    <a href="terms.html">Terms of Service</a> • 
-    <a href="disclaimer.html">Disclaimer</a>
-  </p>
-</footer>
+    <p>© 2025 <strong>Black Force 007</strong> | All Rights Reserved</p>
+    
+    <p>
+      <a href="about.html">About</a> • 
+      <a href="privacy.html">Privacy Policy</a> • 
+      <a href="terms.html">Terms of Service</a> • 
+      <a href="disclaimer.html">Disclaimer</a>
+    </p>
+  </footer>
 
-  <!-- ✅ Game Script (Unchanged Engine) -->
+  <!-- ✅ Load Game Engine -->
   <script src="questions.js"></script>
-<script src="script.js"></script>
-
-  let index=0,correct=0,wrong=0,score=0;
-  const questionText=document.getElementById("question");
-  const optionsBox=document.getElementById("options");
-  const qIndex=document.getElementById("qIndex");
-  const qTotal=document.getElementById("qTotal");
-  const correctBox=document.getElementById("correct");
-  const wrongBox=document.getElementById("wrong");
-  const scoreBox=document.getElementById("score");
-  const nextBtn=document.getElementById("nextBtn");
-  const restartBtn=document.getElementById("restartBtn");
-
-  function startGame(){
-    index=0;correct=0;wrong=0;score=0;
-    qTotal.textContent=QUESTIONS.length;
-    showQuestion();
-    nextBtn.classList.add("hidden");
-    restartBtn.classList.add("hidden");
-  }
-
-  function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
-
-  function showQuestion(){
-    const q=QUESTIONS[index];
-    qIndex.textContent=index+1;
-    questionText.textContent=q.q;
-    const shuffled=shuffle([...q.options]);
-    optionsBox.innerHTML="";
-    shuffled.forEach(opt=>{
-      const btn=document.createElement("button");
-      btn.textContent=opt;
-      btn.onclick=()=>checkAnswer(opt,q.options[q.a],btn);
-      optionsBox.appendChild(btn);
-    });
-  }
-
-  function checkAnswer(selected,correctAns,btn){
-    const allBtns=optionsBox.querySelectorAll("button");
-    allBtns.forEach(b=>b.disabled=true);
-    if(selected===correctAns){btn.style.background="#00e676";correct++;score+=5;}
-    else{btn.style.background="#ff1744";wrong++;}
-    correctBox.textContent=correct;
-    wrongBox.textContent=wrong;
-    scoreBox.textContent=score;
-    nextBtn.classList.remove("hidden");
-  }
-
-  nextBtn.addEventListener("click",()=>{
-    index++;
-    if(index<QUESTIONS.length){showQuestion();nextBtn.classList.add("hidden");}
-    else{endGame();}
-  });
-
-  function endGame(){
-    questionText.textContent=`🎯 গেম শেষ! মোট স্কোর: ${score}`;
-    optionsBox.innerHTML="";
-    nextBtn.classList.add("hidden");
-    restartBtn.classList.remove("hidden");
-  }
-
-  restartBtn.addEventListener("click",startGame);
-  document.addEventListener("DOMContentLoaded",startGame);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

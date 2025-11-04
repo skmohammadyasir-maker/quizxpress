@@ -1,164 +1,161 @@
-// UI Elements
-const qTotalEl = document.getElementById('qTotal');
-const qTotal2El = document.getElementById('qTotal2');
-const qIndexEl = document.getElementById('qIndex');
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const timerEl = document.getElementById('timer');
-const statCorrect = document.getElementById('stat-correct');
-const statWrong = document.getElementById('stat-wrong');
-const statScore = document.getElementById('stat-score');
-const statCoins = document.getElementById('stat-coins');
-const resultScreen = document.getElementById('result-screen');
-const finalCorrect = document.getElementById('final-correct');
-const finalWrong = document.getElementById('final-wrong');
-const finalScore = document.getElementById('final-score');
-const finalCoins = document.getElementById('final-coins');
-const bestScore = document.getElementById('bestScore');
-const playAgain = document.getElementById('playAgain');
-const fiftyBtn = document.getElementById('fiftyBtn');
-const hintBtn = document.getElementById('hintBtn');
-const skipBtn = document.getElementById('skipBtn');
-const hintEl = document.getElementById('hint');
-const soundToggle = document.getElementById('soundToggle');
+// ✅ Black Force 007 — Bengali Quiz Questions
+const QUESTIONS = [
+  {id:1,q:'নিচের কোনটি সাধারণত বিশ্বাসভঙ্গকে নির্দেশ করে?',options:['দালাল','সাহায্য','দয়া','নিবেদন'],a:0,hint:'কেউ যে বিশ্বাসঘাতকতা করে তাকে বলা হয়...',category:'বেহুবি'},
+  {id:2,q:'কোন শব্দটি লোভ বা সুবিধা নেওয়ার অর্থ বহন করে?',options:['চামচা','ত্যাগ','মমতা','নিষ্ঠা'],a:0,hint:'কেউ যে প্রতিকূল পরিস্থিতিতে সুবিধা নেয়...',category:'চরিত্র'},
+  {id:3,q:'নিচের কোনটি নেতিবাচক আচরণ — অন্যের সম্পর্কে গোপন আলোচনা?',options:['পরচর্চা','উৎসাহ','সহযোগীতা','আশারাজি'],a:0,hint:'ব্যক্তিগত বিষয়ে পেছনে বারবার আলোচনা করা',category:'সামাজিক'},
+  {id:4,q:'কোনটি অন্যের প্রতি খারাপ ইচ্ছা বা ক্ষতি কামনায় ব্যবহৃত হয়?',options:['হিংসা','ভালোবাসা','সাহায্য','রাগ'],a:0,hint:'যখন কেউ সফল হলে বিরোধী অনুভব হয়',category:'মনস্তত্ত্ব'},
+  {id:5,q:'কোন শব্দটি অনুচিতভাবে প্রভাবিত করার জন্য অর্থবচন করে?',options:['দালাল','নাগরিক','শিক্ষক','চিকিৎসক'],a:0,hint:'বিচার বা সিদ্ধান্ত প্রভাবিত করার চেষ্টা',category:'দুর্নীতি'},
+  {id:6,q:'কোনটি প্রায়ই সত্য বলতে অস্বীকার করে এবং উদ্দেশ্যভিত্তিক হয়?',options:['চামচা','সৎ','সদয়','সাহায্যকারী'],a:0,hint:'যে ব্যক্তি সব সময় প্রশংসা করে',category:'চরিত্র'},
+  {id:7,q:'কোনটি চেনাশোনার লোককে অযত্নে সুবিধা দেওয়ার প্রবণতা বোঝায়?',options:['পছন্দ','পরচর্চা','ফরমায়েশ','নির্বাচন'],a:2,hint:'সামাজিক প্রভাব ব্যবহার করে কাউকে নিয়ে সিদ্ধান্ত',category:'সামাজিক'},
+  {id:8,q:'কোনটি সৎ আচরণের বিপরীত — অন্যের ক্ষতি কামনা?',options:['হিংসা','শ্রদ্ধা','সাজানো','খুশি'],a:0,hint:'অন্যের অন্ধকার ইচ্ছা',category:'মনস্তত্ত্ব'},
+  {id:9,q:'কোনটি গোপনভাবে কুৎসা রটানোর কাজ নির্দেশ করে?',options:['কলঙ্ক','পরচর্চা','গুরুত্ব','সততা'],a:1,hint:'পেছনে কুৎসা ছড়ানো',category:'সামাজিক'},
+  {id:10,q:'কোনটি সাধতান্ত্রিক হয় — সমন্বয় ও সহানুভূতি?',options:['সহযোগিতা','দালাল','চালক','চামচা'],a:0,hint:'দলের কাজে সবাই মিলে কাজ করা',category:'সদাচার'},
+  {id:11,q:'কোনটি ঔপনিবেশিক বা কেমনন আচরণ বোঝায় — বাধ্য হয়ে দেবার জন্য ব্যবহৃত?',options:['দালাল','নিন্দুক','বন্ধু','অপরাধী'],a:0,hint:'কেউ অন্যের পক্ষে কথা বললেও উদ্দেশ্য অনৈতিক',category:'দুর্নীতি'},
+  {id:12,q:'কোনটি প্রশংসা অতিরঞ্জিত করে যাতে সুবিধা পাওয়া যায়?',options:['চামচা','সৎ','মিতাভাষী','কঠোর'],a:0,hint:'অতি প্রশংসার মাধ্যমে লাভ করার চেষ্টা',category:'চরিত্র'},
+  {id:13,q:'নিচের কোনটি গোপন আলোচনা করে অন্যের ক্ষতি করে?',options:['পরচর্চা','সমর্থন','নির্বাচন','আশা'],a:0,hint:'ব্যক্তিগত তথ্য অন্যকে বলে দেয়া',category:'সামাজিক'},
+  {id:14,q:'কোনটি নৈতিকভাবে ভুল — অন্যের সাফল্য দেখে ক্ষোভ করা?',options:['হিংসা','উৎসব','উত্সাহ','বিজয়'],a:0,hint:'অন্যের উন্নতি দেখে কৃশ অনুভব করা',category:'মনস্তত্ত্ব'},
+  {id:15,q:'কোনটি কোনো বিষয়ে অনৈতিক ছদ্মবেশী মাধ্যম যা সুবিধা নিয়ে কাজ করে?',options:['দালাল','অধ্যাপক','সহকারী','কর্মচারী'],a:0,hint:'প্রভাব ব্যবহার করে সুবিধা নেওয়া',category:'দুর্নীতি'},
+  {id:16,q:'কোনটি বিশ্বাসযোগ্য নয় — অতিরিক্ত মিষ্টি কথা বলে?',options:['চামচা','নিষ্ঠাবান','সৎ','দক্ষ'],a:0,hint:'প্রায়ই মিষ্টি কণ্ঠে সবাইকে পছন্দ করা',category:'চরিত্র'},
+  {id:17,q:'কোনটি লোকের পিছনে গোপন অপবাদ ছড়ায়?',options:['পরচর্চা','সম্মান','কাজ','উপহার'],a:0,hint:'পেছনে কথা বলা',category:'সামাজিক'},
+  {id:18,q:'কোনটি অন্যের সুখকে বিঘ্নিত করার নেতিবাচক আবেগ?',options:['হিংসা','আনন্দ','উৎসাহ','সহানুভূতি'],a:0,hint:'অপরের ক্ষতি কামনা করা',category:'মনস্তত্ত্ব'},
+  {id:19,q:'কোনটি অন্যকে বোকা বানিয়ে সুবিধা নেওয়ার চেষ্টা বোঝায়?',options:['দালাল','শিক্ষক','সন্তান','বন্ধু'],a:0,hint:'কাওকে ব্যবহার করে লাভ নেয়া',category:'দুর্নীতি'},
+  {id:20,q:'কোনটি অতি প্রশংসা করে — উদ্দেশ্য সুবিধা নেওয়া?',options:['চামচা','সহৃদয়','সতর্ক','নিষ্ঠাবান'],a:0,hint:'প্রশংসার মাধ্যমে সম্পর্ক বানানো',category:'চরিত্র'},
+  {id:21,q:'কোনটি গোপন আলোচনা ও কুৎসা রটায়?',options:['পরচর্চা','সহযোগিতা','বিশ্বাস','উপদেশ'],a:0,hint:'পেছনে লোকের সম্পর্কে কথা বলা',category:'সামাজিক'},
+  {id:22,q:'কোনটি দার্শনিকভাবে অন্যের সফলতা ক্ষুব্ধ করে?',options:['হিংসা','সংযম','ধৈর্য','শান্তি'],a:0,hint:'অন্যের সাফল্য দেখে মন কটু করা',category:'মনস্তত্ত্ব'},
+  {id:23,q:'কোনটি অনৈতিক প্রভাব বা মধ্যস্থতাকে বোঝায়?',options:['দালাল','সেবক','শ্রমিক','কৃষক'],a:0,hint:'জনপ্রতিনিধি বা কর্তৃপক্ষকে প্রভাবিত করা',category:'দুর্নীতি'},
+  {id:24,q:'কোনটি মিষ্টি কথায় লোককে প্রলুব্ধ করে?',options:['চামচা','সৎ','ন্যায়ী','বিবেকবান'],a:0,hint:'প্রশংসা করে সুবিধা নেওয়া',category:'চরিত্র'},
+  {id:25,q:'কোনটি সন্দেহের সূত্রপাত করে — গোপন অপবাদ?',options:['পরচর্চা','বিশ্বাস','উপহার','সম্মান'],a:0,hint:'অন্যের সম্পর্কে গল্প ছড়ানো',category:'সামাজিক'},
+  {id:26,q:'কোনটি ক্ষুদ্র ইচ্ছা বা বিদ্বেষ দেখায়?',options:['হিংসা','সহানুভূতি','উদারতা','ভালোবাসা'],a:0,hint:'বাস্তবে বিদ্বেষী মনে হওয়া',category:'মনস্তত্ত্ব'},
+  {id:27,q:'কোনটি প্রভাবশালী লোকের সঙ্গে লেনদেন করে দুর্নীতির প্রতীক?',options:['দালাল','বাঘ','নায়ক','শহর'],a:0,hint:'মধ্যস্থতা করে সুবিধা নেয়া',category:'দুর্নীতি'},
+  {id:28,q:'কোনটি প্রশংসায় অতিরিক্ত তুষ্টি দেখায় — উদ্দেশ্য সুবিধা?',options:['চামচা','সৎ','সাধু','সৎকর্মী'],a:0,hint:'সাহায্যের বদলে মিষ্টি বলা',category:'চরিত্র'},
+  {id:29,q:'কোনটি লোকের পিছনে কুৎসা ছড়ানোর কাজ বোঝায়?',options:['পরচর্চা','সহযোগীতা','উৎসব','বাহাদুরি'],a:0,hint:'পেছনে কথা বলা',category:'সামাজিক'},
+  {id:30,q:'কোনটি অন্যের সাফল্যের জন্য কৃপণ চোখে দেখা?',options:['হিংসা','আনন্দ','বড়জোড়','সহীতা'],a:0,hint:'সাফল্য দেখে খারাপ লাগা',category:'মনস্তত্ত্ব'},
+  {id:31,q:'কোনটি ভদ্রতা না দেখিয়ে সুবিধা নেবার চেষ্টা বোঝায়?',options:['দালাল','সহকর্মী','শিক্ষক','ডাক্তার'],a:0,hint:'পাল্টাপাল্টি মধ্যস্থতা',category:'দুর্নীতি'},
+  {id:32,q:'কোনটি বাড়তি প্রশংসা করে বাক্তিগত সুবিধা হাসিল করে?',options:['চামচা','সৎ','নিষ্ঠাবান','সহৃদয়'],a:0,hint:'চাটুকারী আচরণ',category:'চরিত্র'},
+  {id:33,q:'কোনটি কুৎসা ছড়ানোর মাধ্যমে অন্যকে ছোট করে?',options:['পরচর্চা','সহানুভূতি','বিরতি','মেলবন্ধন'],a:0,hint:'কথায়-কথায় কুৎসা ছড়ানো',category:'সামাজিক'},
+  {id:34,q:'কোনটি ঈর্ষা বা বিদ্বেষের অনুভূতি বোঝায়?',options:['হিংসা','দয়া','আইজ্ঞান','মুক্তি'],a:0,hint:'অন্যের প্রতি ঈর্ষা বোধ করা',category:'মনস্তত্ত্ব'},
+  {id:35,q:'কোনটি অনৈতিকভাবে সহযোগিতা বা মধ্যস্থতা করে?',options:['দালাল','সাহায্যকারী','চুক্তি','বন্ধু'],a:0,hint:'বিভিন্ন উপায়ে প্রভাবিত করা',category:'দুর্নীতি'},
+  {id:36,q:'কোনটি মিষ্টি কথায় মানুষকে প্রবঞ্চনা করে?',options:['চামচা','ভদ্র','বিনয়ী','নিষ্ঠাবান'],a:0,hint:'প্রশংসাতে অতিরঞ্জন',category:'চরিত্র'},
+  {id:37,q:'কোনটি গোপনে কুৎসা রটায় এবং সামাজিক বিভাজন সৃষ্টি করে?',options:['পরচর্চা','বহিঃপ্রকাশ','সম্মান','প্রশংসা'],a:0,hint:'গুপ্তভাবে কথা ছড়ানো',category:'সামাজিক'},
+  {id:38,q:'কোনটি অন্যের জন্য ক্ষুদ্রতর অনুভূতি সৃষ্টি করে — ইচ্ছাপূরণে ব্যর্থতা?',options:['হিংসা','সমঝোতা','ধৈর্য','বন্ধুত্ব'],a:0,hint:'অন্যের সাফল্য নেভাবে দেখা',category:'মনস্তত্ত্ব'},
+  {id:39,q:'কোনটি মধ্যস্থতাকারীর মাধ্যমে অনৈতিক সুবিধা নির্দেশ করে?',options:['দালাল','নান্দনিক','প্রতিভা','মেধা'],a:0,hint:'অধিকারের মিথ্যা কাজে ব্যবহার',category:'দুর্নীতি'},
+  {id:40,q:'কোনটি অতি প্রশংসা এবং মিষ্টি কথা ব্যবহার করে সুবিধা নেয়াতে ব্যবহৃত হয়?',options:['চামচা','সৎ','সাহসী','নিষ্ঠাবান'],a:0,hint:'চাটুকারী আচরণই এটি',category:'চরিত্র'}
+];
 
-let soundsOn = true;
-const sounds = {
-  click: new Audio('sounds/click.mp3'),
-  correct: new Audio('sounds/correct.mp3'),
-  wrong: new Audio('sounds/wrong.mp3')
-};
-function playSound(name){
-  if(!soundsOn) return;
-  const s = sounds[name];
-  if(s){ s.currentTime=0; s.play().catch(()=>{}); }
+/* ===== Utility Shuffle ===== */
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-// Initialize engine
-const engine = new GameEngine({
-  questions: QUESTIONS,
-  total: QUESTIONS.length,
-  timePerQ: 15,
-  coinsPerCorrect: 5,
-  skipPenalty: 0
-});
+/* ===== Game Engine ===== */
+class GameEngine {
+  constructor({ questions, total = 10, timePerQ = 15, coinsPerCorrect = 5 }) {
+    this.allQuestions = questions;
+    this.total = Math.min(total, questions.length);
+    this.timePerQ = timePerQ;
+    this.coinsPerCorrect = coinsPerCorrect;
+    this.reset();
+  }
 
-function renderStats(){
-  qTotalEl.textContent = engine.total;
-  qIndexEl.textContent = Math.min(engine.index+1, engine.total);
-  statCorrect.textContent = engine.correct;
-  statWrong.textContent = engine.wrong;
-  statScore.textContent = engine.score;
-  statCoins.textContent = engine.coins;
-}
+  reset() {
+    this.questions = shuffleArray(this.allQuestions).slice(0, this.total);
+    this.index = 0;
+    this.correct = 0;
+    this.wrong = 0;
+    this.score = 0;
+    this.coins = 0;
+    this.timer = this.timePerQ;
+  }
 
-function renderQuestion(){
-  const q = engine.current();
-  optionsEl.innerHTML='';
-  hintEl.classList.add('hidden');
-  hintEl.textContent='';
-  if(!q){ finishGame(); return; }
+  current() { return this.questions[this.index] || null; }
 
-  questionEl.textContent = q.q;
-  optionsEl.className = 'options-grid';
-
-  q.options.forEach((opt,i)=>{
-    const b = document.createElement('div');
-    b.className = 'option';
-    b.dataset.index = i;
-    b.textContent = opt;
-    b.onclick = () => onOptionClick(i,b);
-    optionsEl.appendChild(b);
-  });
-
-  renderStats();
-  startQTimer();
-}
-
-let optionClickable = true;
-
-function onOptionClick(i,btnEl){
-  if(!optionClickable) return;
-  optionClickable=false;
-  engine.stopTimer();
-  const res = engine.answer(i);
-  if(res.correct){
-    btnEl.classList.add('correct');
-    playSound('correct');
-  } else {
-    btnEl.classList.add('wrong');
-    playSound('wrong');
-    const correctIndex = engine.questions[engine.index-1]?.a;
-    if(correctIndex!=null){
-      const el = [...optionsEl.children].find(x=>+x.dataset.index===correctIndex);
-      if(el) el.classList.add('correct');
+  answer(i) {
+    const q = this.current();
+    if (!q) return;
+    const correct = i === q.a;
+    if (correct) {
+      this.correct++; this.score += 10; this.coins += this.coinsPerCorrect;
+    } else {
+      this.wrong++; this.score = Math.max(0, this.score - 5);
     }
+    this.index++; return { correct };
   }
-  setTimeout(()=>{
-    optionClickable=true;
-    if(engine.isFinished()) finishGame();
+
+  isFinished() { return this.index >= this.total; }
+
+  startTimer(onTick, onExpire) {
+    this.stopTimer();
+    this.timer = this.timePerQ;
+    onTick?.(this.timer);
+    this._interval = setInterval(() => {
+      this.timer--;
+      onTick?.(this.timer);
+      if (this.timer <= 0) { this.stopTimer(); onExpire?.(); }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this._interval) clearInterval(this._interval);
+  }
+}
+
+/* ====== DOM Logic ====== */
+document.addEventListener("DOMContentLoaded", () => {
+  const qText = document.getElementById("question");
+  const opts = document.getElementById("options");
+  const qIndex = document.getElementById("qIndex");
+  const qTotal = document.getElementById("qTotal");
+  const timerEl = document.getElementById("timer");
+  const modal = document.getElementById("modal");
+  const modalText = document.getElementById("modal-text");
+  const modalBtn = document.getElementById("modal-btn");
+
+  const engine = new GameEngine({ questions: QUESTIONS, total: 10, timePerQ: 15 });
+  qTotal.textContent = engine.total;
+
+  function renderQuestion() {
+    const q = engine.current();
+    if (!q) return showResult();
+    qText.textContent = q.q;
+    opts.innerHTML = "";
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "option";
+      btn.textContent = opt;
+      btn.onclick = () => handleAnswer(i, btn);
+      opts.appendChild(btn);
+    });
+    qIndex.textContent = engine.index + 1;
+    engine.startTimer((t) => (timerEl.textContent = t), nextQuestion);
+  }
+
+  function handleAnswer(i, btn) {
+    const result = engine.answer(i);
+    engine.stopTimer();
+    btn.classList.add(result.correct ? "correct" : "wrong");
+    setTimeout(nextQuestion, 800);
+  }
+
+  function nextQuestion() {
+    if (engine.isFinished()) showResult();
     else renderQuestion();
-  },1000);
-}
-
-function startQTimer(){
-  timerEl.textContent = engine.timePerQ;
-  engine.startTimer((t)=>{ timerEl.textContent=t; },()=>{
-    playSound('wrong');
-    engine.wrong++;
-    engine.index++;
-    engine.streak=0;
-    renderStats();
-    if(engine.isFinished()) finishGame(); else renderQuestion();
-  });
-}
-
-function finishGame(){
-  engine.stopTimer();
-  finalCorrect.textContent = engine.correct;
-  finalWrong.textContent = engine.wrong;
-  finalScore.textContent = engine.score;
-  finalCoins.textContent = engine.coins;
-  const best = Math.max(parseInt(localStorage.getItem('best_score')||0), engine.score);
-  localStorage.setItem('best_score', best);
-  bestScore.textContent = best;
-  resultScreen.classList.remove('hidden');
-}
-
-playAgain.onclick = ()=>{
-  resultScreen.classList.add('hidden');
-  engine.reset();
-  renderQuestion();
-};
-
-fiftyBtn.onclick = ()=>{
-  playSound('click');
-  const removed = engine.useFifty();
-  if(!removed){ alert('50-50 আগেই ব্যবহৃত হয়েছে'); return; }
-  for(const idx of removed){
-    const el = [...optionsEl.children].find(x=>+x.dataset.index===idx);
-    if(el) el.style.visibility='hidden';
   }
-};
 
-hintBtn.onclick = ()=>{
-  playSound('click');
-  const hint = engine.useHint();
-  if(!hint){ alert('Hint আগেই ব্যবহৃত হয়েছে'); return; }
-  hintEl.textContent = hint;
-  hintEl.classList.remove('hidden');
-};
+  function showResult() {
+    modal.classList.remove("hidden");
+    modalText.textContent = `✅ ${engine.correct} ঠিক, ❌ ${engine.wrong} ভুল\n🌟 স্কোর: ${engine.score} | কয়েন: ${engine.coins}`;
+  }
 
-skipBtn.onclick = ()=>{
-  playSound('click');
-  const ok = engine.useSkip();
-  if(!ok){ alert('Skip আগেই ব্যবহৃত হয়েছে'); return; }
-  if(engine.isFinished()) finishGame(); else renderQuestion();
-};
+  modalBtn.onclick = () => {
+    modal.classList.add("hidden");
+    engine.reset();
+    renderQuestion();
+  };
 
-soundToggle.onclick = ()=>{
-  soundsOn=!soundsOn;
-  soundToggle.textContent = soundsOn ? '🔊' : '🔇';
-};
-
-renderQuestion();
+  renderQuestion();
+});

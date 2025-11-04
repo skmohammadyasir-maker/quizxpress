@@ -153,37 +153,26 @@ body {
   text-align: center;
 }
 
-/* Footer & About Note */
-.foot {
-  margin-top: 20px;
+footer {
+  margin-top: 30px;
   text-align: center;
-  color: var(--muted);
+  color: #9aa0b5;
   font-size: 0.9rem;
-}
-.about-note {
-  margin-top: 40px;
-  font-size: 0.9rem;
-  color: #94a3b8;
-  text-align: center;
   line-height: 1.6;
 }
-.about-note h2 {
-  font-size: 1rem;
-  color: var(--accent);
-  margin-bottom: 6px;
+
+footer a {
+  color: #ffd966;
+  text-decoration: none;
+  margin: 0 5px;
 }
 
-/* Utility */
-.hidden {
-  display: none;
+footer a:hover {
+  text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .title {
-    font-size: 22px;
-  }
-  .question-text {
-    font-size: 18px;
-  }
+.about-note {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 10px;
 }

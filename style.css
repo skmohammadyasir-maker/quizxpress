@@ -1,91 +1,86 @@
 /* ===============================
-   🎯 QuizXpress Script
-   Handles UI, game events, and rendering
+   🎨 QuizXpress Styles
    =============================== */
 
-const qBox = document.getElementById("questionBox");
-const optionsEl = document.getElementById("options");
-const timerEl = document.getElementById("timer");
-const scoreEl = document.getElementById("score");
-const nextBtn = document.getElementById("nextBtn");
-const startBtn = document.getElementById("startBtn");
-const gameBox = document.getElementById("gameBox");
-const startScreen = document.getElementById("startScreen");
-const resultBox = document.getElementById("resultBox");
-const finalScore = document.getElementById("finalScore");
-
-let engine;
-
-function initGame() {
-  engine = new GameEngine({
-    questions: QUESTIONS,
-    total: 40,
-    timePerQ: 15,
-    coinsPerCorrect: 5
-  });
-  showQuestion();
+body {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  background: #f8f9fa;
+  color: #222;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
-function showQuestion() {
-  const q = engine.current();
-  if (!q) {
-    showResult();
-    return;
-  }
-
-  qBox.innerText = q.q;
-
-  // Create option table
-  optionsEl.innerHTML = `
-    <table class="option-table">
-      ${q.options
-        .map(
-          (opt, i) =>
-            `<tr><td><button class="option-btn" data-index="${i}">${opt}</button></td></tr>`
-        )
-        .join("")}
-    </table>
-  `;
-
-  // Timer
-  engine.startTimer(
-    (t) => (timerEl.innerText = `⏳ ${t}s`),
-    () => handleAnswer(-1)
-  );
-
-  document.querySelectorAll(".option-btn").forEach((btn) => {
-    btn.onclick = () => handleAnswer(parseInt(btn.dataset.index));
-  });
+#gameBox, #resultBox {
+  max-width: 600px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
 }
 
-function handleAnswer(index) {
-  engine.stopTimer();
-  const q = engine.current();
-  const result = engine.answer(index);
-  const buttons = document.querySelectorAll(".option-btn");
-
-  buttons.forEach((btn, i) => {
-    btn.disabled = true;
-    if (i === q.a) {
-      btn.classList.add("correct");
-    }
-    if (index === i && !result.correct) {
-      btn.classList.add("wrong");
-    }
-  });
-
-  scoreEl.innerText = `⭐ ${engine.score}`;
-  setTimeout(() => showQuestion(), 1200);
+#questionBox {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
-function showResult() {
-  gameBox.style.display = "none";
-  resultBox.style.display = "block";
-  finalScore.innerText = `${engine.score} Points`;
+.option-table {
+  width: 100%;
+  border-spacing: 10px;
 }
 
-startBtn.onclick = () => {
-  startScreen.style.display = "none";
-  gameBox.style.display = "block";
-  initGame();
-};
+.option-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  background: #e9ecef;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.option-btn:hover {
+  background: #dee2e6;
+}
+
+.option-btn.correct {
+  background: #28a745 !important;
+  color: #fff;
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.option-btn.wrong {
+  background: #dc3545 !important;
+  color: #fff;
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+#timer, #score {
+  font-size: 1.1rem;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+#startScreen, #resultBox {
+  display: none;
+}
+
+button#startBtn {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button#startBtn:hover {
+  background: #0056b3;
+}

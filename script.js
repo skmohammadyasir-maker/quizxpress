@@ -1,6 +1,8 @@
-// script.js
+// ✅ script.js — Fully working with index.html + questions.js + engine.js
+// Developed for Black Force 007 Bengali Quiz Game
+
 document.addEventListener('DOMContentLoaded', function() {
-  // DOM elements
+  // ===== DOM Elements =====
   const questionElement = document.getElementById('question');
   const optionsElement = document.getElementById('options');
   const nextBtn = document.getElementById('nextBtn');
@@ -11,84 +13,148 @@ document.addEventListener('DOMContentLoaded', function() {
   const wrongElement = document.getElementById('wrong');
   const scoreElement = document.getElementById('score');
 
-  // Initialize quiz engine
+  // ===== Quiz Data =====
+  const quizQuestions = QUESTIONS.map((q, i) => ({
+    id: q.id || i + 1,
+    category: q.category || "সাধারণ জ্ঞান",
+    question: q.question,
+    options: q.options,
+    correct: q.answerIndex,
+    hint: q.explanation || "সঠিক উত্তর সম্পর্কে আরও জানার চেষ্টা করুন।"
+  }));
+
+  // ===== Quiz Engine =====
+  class QuizEngine {
+    constructor(questions) {
+      this.questions = this.shuffleArray([...questions]);
+      this.currentIndex = 0;
+      this.correct = 0;
+      this.wrong = 0;
+      this.score = 0;
+      this.pointsPerCorrect = 10;
+    }
+
+    // Shuffle questions
+    shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    getCurrentQuestion() {
+      return this.questions[this.currentIndex];
+    }
+
+    getProgress() {
+      return { current: this.currentIndex + 1, total: this.questions.length };
+    }
+
+    checkAnswer(selectedIndex) {
+      const current = this.getCurrentQuestion();
+      const isCorrect = selectedIndex === current.correct;
+      if (isCorrect) {
+        this.correct++;
+        this.score += this.pointsPerCorrect;
+      } else {
+        this.wrong++;
+      }
+      return isCorrect;
+    }
+
+    moveToNextQuestion() {
+      this.currentIndex++;
+      return this.currentIndex < this.questions.length;
+    }
+
+    getStats() {
+      return { correct: this.correct, wrong: this.wrong, score: this.score };
+    }
+
+    restartGame() {
+      this.currentIndex = 0;
+      this.correct = 0;
+      this.wrong = 0;
+      this.score = 0;
+      this.questions = this.shuffleArray([...quizQuestions]);
+    }
+  }
+
+  // ===== Initialize Quiz Engine =====
   const quizEngine = new QuizEngine(quizQuestions);
-  
-  // Initialize UI
+
+  // ===== Initialize Game =====
   function initializeGame() {
     qTotalElement.textContent = quizQuestions.length;
     updateStats();
     loadQuestion();
   }
 
-  // Load current question
+  // ===== Load Question =====
   function loadQuestion() {
     const currentQuestion = quizEngine.getCurrentQuestion();
     const progress = quizEngine.getProgress();
-    
+
     if (!currentQuestion) {
       endGame();
       return;
     }
 
     qIndexElement.textContent = progress.current;
-    
-    // Display question with category
+
     questionElement.innerHTML = `
       <div style="margin-bottom: 10px; font-size: 0.9rem; color: var(--neon-blue);">
-        বিষয়: ${currentQuestion.category}
+        📚 বিষয়: ${currentQuestion.category}
       </div>
       <div>${currentQuestion.question}</div>
     `;
-    
-    // Clear previous options
+
     optionsElement.innerHTML = '';
-    
-    // Create option buttons
     currentQuestion.options.forEach((option, index) => {
       const button = document.createElement('button');
       button.textContent = option;
+      button.className = 'option-btn';
       button.addEventListener('click', () => handleAnswerClick(index));
       optionsElement.appendChild(button);
     });
 
-    // Update button visibility
     nextBtn.classList.add('hidden');
     restartBtn.classList.add('hidden');
   }
 
-  // Handle answer selection
+  // ===== Handle Answer Click =====
   function handleAnswerClick(selectedIndex) {
     const isCorrect = quizEngine.checkAnswer(selectedIndex);
-    const buttons = optionsElement.querySelectorAll('button');
     const currentQuestion = quizEngine.getCurrentQuestion();
-    
-    // Disable all buttons after selection
-    buttons.forEach(button => {
-      button.disabled = true;
-    });
-    
-    // Highlight correct and wrong answers
+    const buttons = optionsElement.querySelectorAll('button');
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    // Correct Highlight
     buttons[currentQuestion.correct].style.background = 'linear-gradient(90deg, #00c853, #009624)';
     buttons[currentQuestion.correct].style.color = '#fff';
     buttons[currentQuestion.correct].style.border = '2px solid #00c853';
-    
+
+    // Wrong Highlight
     if (!isCorrect) {
       buttons[selectedIndex].style.background = 'linear-gradient(90deg, #ff1744, #d50000)';
       buttons[selectedIndex].style.color = '#fff';
       buttons[selectedIndex].style.border = '2px solid #ff1744';
     }
-    
-    // Show hint
+
     showHint(currentQuestion.hint);
-    
     updateStats();
     nextBtn.classList.remove('hidden');
   }
 
-  // Show hint
+  // ===== Show Hint =====
   function showHint(hint) {
+    const existingHint = document.querySelector('.hint-message');
+    if (existingHint) existingHint.remove();
+
     const hintElement = document.createElement('div');
+    hintElement.className = 'hint-message';
     hintElement.style.cssText = `
       margin-top: 15px;
       padding: 10px;
@@ -100,18 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
       text-align: center;
     `;
     hintElement.innerHTML = `💡 ইঙ্গিত: ${hint}`;
-    
-    // Remove existing hint if any
-    const existingHint = document.querySelector('.hint-message');
-    if (existingHint) {
-      existingHint.remove();
-    }
-    
-    hintElement.classList.add('hint-message');
     questionElement.parentNode.insertBefore(hintElement, questionElement.nextSibling);
   }
 
-  // Update statistics
+  // ===== Update Stats =====
   function updateStats() {
     const stats = quizEngine.getStats();
     correctElement.textContent = stats.correct;
@@ -119,69 +177,61 @@ document.addEventListener('DOMContentLoaded', function() {
     scoreElement.textContent = stats.score;
   }
 
-  // Move to next question
+  // ===== Next Question =====
   function nextQuestion() {
-    // Remove hint
     const hintElement = document.querySelector('.hint-message');
-    if (hintElement) {
-      hintElement.remove();
-    }
-    
-    const hasMoreQuestions = quizEngine.moveToNextQuestion();
-    
-    if (hasMoreQuestions) {
+    if (hintElement) hintElement.remove();
+
+    const hasMore = quizEngine.moveToNextQuestion();
+    if (hasMore) {
       loadQuestion();
     } else {
       endGame();
     }
   }
 
-  // End game screen
+  // ===== End Game =====
   function endGame() {
     const stats = quizEngine.getStats();
     const percentage = Math.round((stats.correct / quizQuestions.length) * 100);
-    
     let message = "";
+
     if (percentage >= 80) {
-      message = "অভিনন্দন! আপনার নৈতিক জ্ঞান ও সামাজিক সচেতনতা অসাধারণ!";
+      message = "অভিনন্দন! 🎉 আপনার নৈতিক ও সামাজিক জ্ঞান অসাধারণ!";
     } else if (percentage >= 60) {
-      message = "ভালো! আপনার জ্ঞান মোটামুটি ভালো, আরও উন্নতি সম্ভব।";
+      message = "ভালো! 👍 আপনার জ্ঞান ভালো, আরও উন্নতি সম্ভব।";
     } else {
-      message = "চেষ্টা চালিয়ে যান! সামাজিক আচরণ সম্পর্কে আরও শিখুন।";
+      message = "চেষ্টা চালিয়ে যান! 💪 আরও শিখুন ও সচেতন হোন।";
     }
-    
+
     questionElement.innerHTML = `
       <div style="text-align: center;">
-        <h2 style="color: var(--neon-gold); margin-bottom: 20px;">🎉 কুইজ সম্পন্ন! 🎉</h2>
-        <p style="margin: 10px 0;">আপনার স্কোর: <strong style="color: var(--neon-blue);">${stats.score}</strong></p>
-        <p style="margin: 10px 0;">সঠিক উত্তর: <strong style="color: #00c853;">${stats.correct}</strong></p>
-        <p style="margin: 10px 0;">ভুল উত্তর: <strong style="color: #ff1744;">${stats.wrong}</strong></p>
-        <p style="margin: 10px 0;">সাফল্যের হার: <strong style="color: var(--neon-gold);">${percentage}%</strong></p>
-        <p style="margin-top: 20px; font-size: 1.1rem; color: var(--neon-blue);">${message}</p>
+        <h2 style="color: var(--neon-gold); margin-bottom: 20px;">🎯 কুইজ সম্পন্ন!</h2>
+        <p>স্কোর: <strong style="color: var(--neon-blue);">${stats.score}</strong></p>
+        <p>সঠিক উত্তর: <strong style="color: #00c853;">${stats.correct}</strong></p>
+        <p>ভুল উত্তর: <strong style="color: #ff1744;">${stats.wrong}</strong></p>
+        <p>সাফল্যের হার: <strong style="color: var(--neon-gold);">${percentage}%</strong></p>
+        <p style="margin-top: 15px; font-size: 1rem; color: var(--neon-blue);">${message}</p>
       </div>
     `;
-    
+
     optionsElement.innerHTML = '';
     nextBtn.classList.add('hidden');
     restartBtn.classList.remove('hidden');
   }
 
-  // Restart game
+  // ===== Restart Game =====
   function restartGame() {
-    // Remove hint if exists
     const hintElement = document.querySelector('.hint-message');
-    if (hintElement) {
-      hintElement.remove();
-    }
-    
+    if (hintElement) hintElement.remove();
     quizEngine.restartGame();
     initializeGame();
   }
 
-  // Event listeners
+  // ===== Event Listeners =====
   nextBtn.addEventListener('click', nextQuestion);
   restartBtn.addEventListener('click', restartGame);
 
-  // Start the game
+  // ===== Start Game =====
   initializeGame();
 });
